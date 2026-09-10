@@ -1,0 +1,111 @@
+﻿<Window x:Class="NeptunoWPF.Views.CategoriaEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Categoría"
+        Height="360"
+        Width="500"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#F5F7FA">
+
+    <Window.Resources>
+
+        <!-- Estilo general de TextBox -->
+        <Style TargetType="TextBox">
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#263238"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#D0D7DE"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="0,6,0,18"/>
+        </Style>
+
+        <!-- Estilo general de Button -->
+        <Style TargetType="Button">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="110"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#1976D2"/>
+        </Style>
+
+    </Window.Resources>
+
+    <Border Margin="20"
+            Background="White"
+            CornerRadius="12"
+            Padding="25">
+
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Título -->
+            <TextBlock Grid.Row="0"
+                       Text="Editar categoría"
+                       FontSize="22"
+                       FontWeight="Bold"
+                       Foreground="#263238"
+                       Margin="0,0,0,22"/>
+
+            <!-- Nombre -->
+            <TextBlock Grid.Row="1"
+                       Text="Nombre"
+                       FontSize="14"
+                       FontWeight="SemiBold"
+                       Foreground="#455A64"/>
+
+            <TextBox Grid.Row="2"
+                     Text="{Binding Categoria.NombreCategoria,
+                            UpdateSourceTrigger=PropertyChanged}"/>
+
+            <!-- Descripción -->
+            <TextBlock Grid.Row="3"
+                       Text="Descripción"
+                       FontSize="14"
+                       FontWeight="SemiBold"
+                       Foreground="#455A64"
+                       VerticalAlignment="Top"/>
+
+            <TextBox Grid.Row="3"
+                     Margin="0,25,0,65"
+                     Height="70"
+                     VerticalContentAlignment="Top"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     Text="{Binding Categoria.Descripcion,
+                            UpdateSourceTrigger=PropertyChanged}"/>
+
+            <!-- Botones -->
+            <StackPanel Grid.Row="4"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Margin="0,15,0,0">
+
+                <Button Content="Guardar"
+                        Margin="0,0,10,0"
+                        Background="#1976D2"
+                        Click="Guardar_Click"/>
+
+                <Button Content="Cancelar"
+                        Background="#78909C"
+                        Click="Cancelar_Click"/>
+
+            </StackPanel>
+
+        </Grid>
+
+    </Border>
+
+</Window>

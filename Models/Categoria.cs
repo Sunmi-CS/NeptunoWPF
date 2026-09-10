@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace NeptunoWPF.Models;
+
+public class Categoria
+{
+    public int CategoriaID { get; set; }
+
+    public string NombreCategoria { get; set; } = string.Empty;
+
+    public string? Descripcion { get; set; }
+}
