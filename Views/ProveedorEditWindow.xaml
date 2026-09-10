@@ -4,144 +4,81 @@
         Title="Proveedor"
         Height="650"
         Width="550"
-        WindowStartupLocation="CenterOwner"
-        ResizeMode="NoResize"
-        Background="#F5F7FA">
+        WindowStartupLocation="CenterOwner">
 
-    <Window.Resources>
+    <ScrollViewer>
 
-        <!-- Estilo para TextBox -->
-        <Style TargetType="TextBox">
-            <Setter Property="Height" Value="38"/>
-            <Setter Property="Padding" Value="12,8"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Foreground" Value="#263238"/>
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="BorderBrush" Value="#D0D7DE"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Margin" Value="0,6,0,18"/>
-        </Style>
+        <Grid Margin="20">
 
-        <!-- Estilo para Button -->
-        <Style TargetType="Button">
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="Width" Value="110"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Foreground" Value="White"/>
-        </Style>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-    </Window.Resources>
+            <TextBlock Text="Compañía"/>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <TextBox Grid.Row="1"
+                     Margin="0,5,0,10"
+                     Text="{Binding Proveedor.CompaniaNombre,
+                            UpdateSourceTrigger=PropertyChanged}"/>
 
-        <Border Margin="20"
-                Background="White"
-                CornerRadius="12"
-                Padding="25">
+            <TextBlock Grid.Row="2"
+                       Text="Nombre de contacto"/>
 
-            <Grid>
+            <TextBox Grid.Row="3"
+                     Margin="0,5,0,10"
+                     Text="{Binding Proveedor.NombreContacto,
+                            UpdateSourceTrigger=PropertyChanged}"/>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+            <TextBlock Grid.Row="4"
+                       Text="Cargo"/>
 
-                <!-- Título -->
-                <TextBlock Grid.Row="0"
-                           Text="Editar proveedor"
-                           FontSize="22"
-                           FontWeight="Bold"
-                           Foreground="#263238"
-                           Margin="0,0,0,22"/>
+            <TextBox Grid.Row="5"
+                     Margin="0,5,0,10"
+                     Text="{Binding Proveedor.CargoContacto,
+                            UpdateSourceTrigger=PropertyChanged}"/>
 
-                <!-- Compañía -->
-                <TextBlock Grid.Row="1"
-                           Text="Compañía"
-                           FontSize="14"
-                           FontWeight="SemiBold"
-                           Foreground="#455A64"/>
+            <TextBlock Grid.Row="6"
+                       Text="Dirección"/>
 
-                <TextBox Grid.Row="2"
-                         Text="{Binding Proveedor.CompaniaNombre,
-                                UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Row="7"
+                     Margin="0,5,0,10"
+                     Text="{Binding Proveedor.Direccion,
+                            UpdateSourceTrigger=PropertyChanged}"/>
 
-                <!-- Nombre de contacto -->
-                <TextBlock Grid.Row="3"
-                           Text="Nombre de contacto"
-                           FontSize="14"
-                           FontWeight="SemiBold"
-                           Foreground="#455A64"/>
+            <TextBlock Grid.Row="8"
+                       Text="Ciudad"/>
 
-                <TextBox Grid.Row="4"
-                         Text="{Binding Proveedor.NombreContacto,
-                                UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Row="9"
+                     Margin="0,5,0,10"
+                     Text="{Binding Proveedor.Ciudad,
+                            UpdateSourceTrigger=PropertyChanged}"/>
 
-                <!-- Cargo -->
-                <TextBlock Grid.Row="5"
-                           Text="Cargo"
-                           FontSize="14"
-                           FontWeight="SemiBold"
-                           Foreground="#455A64"/>
+            <StackPanel Grid.Row="10"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right" Margin="0,0,0,297">
 
-                <TextBox Grid.Row="6"
-                         Text="{Binding Proveedor.CargoContacto,
-                                UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Content="Guardar"
+                        Width="100"
+                        Margin="0,0,10,0"
+                        Click="Guardar_Click" Height="26"/>
 
-                <!-- Dirección -->
-                <TextBlock Grid.Row="7"
-                           Text="Dirección"
-                           FontSize="14"
-                           FontWeight="SemiBold"
-                           Foreground="#455A64"/>
+                <Button Content="Cancelar"
+                        Width="100"
+                        Click="Cancelar_Click" Height="26"/>
 
-                <TextBox Grid.Row="8"
-                         Text="{Binding Proveedor.Direccion,
-                                UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
 
-                <!-- Ciudad -->
-                <TextBlock Grid.Row="9"
-                           Text="Ciudad"
-                           FontSize="14"
-                           FontWeight="SemiBold"
-                           Foreground="#455A64"/>
-
-                <TextBox Grid.Row="10"
-                         Text="{Binding Proveedor.Ciudad,
-                                UpdateSourceTrigger=PropertyChanged}"/>
-
-                <!-- Botones -->
-                <StackPanel Grid.Row="11"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Right"
-                            Margin="0,10,0,0">
-
-                    <Button Content="Guardar"
-                            Margin="0,0,10,0"
-                            Background="#1976D2"
-                            Click="Guardar_Click"/>
-
-                    <Button Content="Cancelar"
-                            Background="#78909C"
-                            Click="Cancelar_Click"/>
-
-                </StackPanel>
-
-            </Grid>
-
-        </Border>
+        </Grid>
 
     </ScrollViewer>
 
