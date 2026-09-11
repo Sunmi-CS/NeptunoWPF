@@ -275,43 +275,67 @@
 
                             <DataGrid.Columns>
 
+                                <!-- ID -->
                                 <DataGridTextColumn
-                                    Header="ID"
-                                    Binding="{Binding ProductoID}"
-                                    Width="60"/>
+        Header="ID"
+        Binding="{Binding ProductoID}"
+        Width="60"/>
 
+                                <!-- Nombre -->
                                 <DataGridTextColumn
-                                    Header="Producto"
-                                    Binding="{Binding NombreProducto}"
-                                    Width="220"/>
+        Header="Producto"
+        Binding="{Binding NombreProducto}"
+        Width="190"/>
 
+                                <!-- Proveedor -->
                                 <DataGridTextColumn
-                                    Header="Proveedor"
-                                    Binding="{Binding Proveedor}"
-                                    Width="180"/>
+        Header="Proveedor"
+        Binding="{Binding Proveedor}"
+        Width="180"/>
 
+                                <!-- Categoría -->
                                 <DataGridTextColumn
-                                    Header="Categoría"
-                                    Binding="{Binding Categoria}"
-                                    Width="150"/>
+        Header="Categoría"
+        Binding="{Binding Categoria}"
+        Width="150"/>
 
+                                <!-- Cantidad por unidad -->
                                 <DataGridTextColumn
-                                    Header="Precio"
-                                    Binding="{Binding PrecioUnidad}"
-                                    Width="100"/>
+        Header="Cantidad por unidad"
+        Binding="{Binding CantidadPorUnidad}"
+        Width="150"/>
 
+                                <!-- Precio -->
                                 <DataGridTextColumn
-                                    Header="Stock"
-                                    Binding="{Binding UnidadesEnExistencia}"
-                                    Width="80"/>
+        Header="Precio"
+        Binding="{Binding PrecioUnidad, StringFormat={}{0:F2}}"
+        Width="90"/>
 
+                                <!-- Unidades en existencia -->
+                                <DataGridTextColumn
+        Header="Existencia"
+        Binding="{Binding UnidadesEnExistencia}"
+        Width="100"/>
+
+                                <!-- Unidades en pedido -->
+                                <DataGridTextColumn
+        Header="En pedido"
+        Binding="{Binding UnidadesEnPedido}"
+        Width="90"/>
+
+                                <!-- Nivel de reorden -->
+                                <DataGridTextColumn
+        Header="Nivel de reorden"
+        Binding="{Binding NivelDeReorden}"
+        Width="110"/>
+
+                                <!-- Descontinuado -->
                                 <DataGridCheckBoxColumn
-                                    Header="Descontinuado"
-                                    Binding="{Binding Descontinuado}"
-                                    Width="110"/>
+        Header="Descontinuado"
+        Binding="{Binding Descontinuado}"
+        Width="110"/>
 
                             </DataGrid.Columns>
-
                         </DataGrid>
 
                     </Grid>
@@ -492,45 +516,76 @@
 
 
                             <DataGrid
-                                ItemsSource="{Binding Proveedores.Proveedores}"
-                                SelectedItem="{Binding Proveedores.ProveedorSeleccionado}"
-                                AutoGenerateColumns="False"
-                                IsReadOnly="True">
+                                    ItemsSource="{Binding Proveedores.Proveedores}"
+                                    SelectedItem="{Binding Proveedores.ProveedorSeleccionado}"
+                                    AutoGenerateColumns="False"
+                                    IsReadOnly="True"
+                                    HorizontalScrollBarVisibility="Auto"
+                                    VerticalScrollBarVisibility="Auto">
 
                                 <DataGrid.Columns>
 
+                                    <!-- ID -->
                                     <DataGridTextColumn
-                                        Header="ID"
-                                        Binding="{Binding ProveedorID}"
-                                        Width="60"/>
+        Header="ID"
+        Binding="{Binding ProveedorID}"
+        Width="60"/>
 
+                                    <!-- Compañía -->
                                     <DataGridTextColumn
-                                        Header="Compañía"
-                                        Binding="{Binding CompaniaNombre}"
-                                        Width="200"/>
+        Header="Compañía"
+        Binding="{Binding CompaniaNombre}"
+        Width="190"/>
 
+                                    <!-- Nombre contacto -->
                                     <DataGridTextColumn
-                                        Header="Contacto"
-                                        Binding="{Binding NombreContacto}"
-                                        Width="180"/>
+        Header="Contacto"
+        Binding="{Binding NombreContacto}"
+        Width="160"/>
 
+                                    <!-- Cargo -->
                                     <DataGridTextColumn
-                                        Header="Ciudad"
-                                        Binding="{Binding Ciudad}"
-                                        Width="130"/>
+        Header="Cargo"
+        Binding="{Binding CargoContacto}"
+        Width="150"/>
 
+                                    <!-- Dirección -->
                                     <DataGridTextColumn
-                                        Header="País"
-                                        Binding="{Binding Pais}"
-                                        Width="100"/>
+        Header="Dirección"
+        Binding="{Binding Direccion}"
+        Width="180"/>
 
+                                    <!-- Ciudad -->
                                     <DataGridTextColumn
-                                        Header="Teléfono"
-                                        Binding="{Binding Telefono}"
-                                        Width="150"/>
+        Header="Ciudad"
+        Binding="{Binding Ciudad}"
+        Width="120"/>
+
+                                    <!-- Código postal -->
+                                    <DataGridTextColumn
+        Header="Código postal"
+        Binding="{Binding CodigoPostal}"
+        Width="100"/>
+
+                                    <!-- País -->
+                                    <DataGridTextColumn
+        Header="País"
+        Binding="{Binding Pais}"
+        Width="100"/>
+
+                                    <!-- Teléfono -->
+                                    <DataGridTextColumn
+        Header="Teléfono"
+        Binding="{Binding Telefono}"
+        Width="130"/>
+
+                                    <!-- Fax -->
+                                    <DataGridTextColumn
+        Header="Fax"
+        Binding="{Binding Fax}"
+        Width="130"/>
 
                                 </DataGrid.Columns>
-
                             </DataGrid>
 
                         </StackPanel>
@@ -594,47 +649,92 @@
                         <!-- LISTADO PEDIDOS -->
 
                         <DataGrid Grid.Row="1"
-                                  ItemsSource="{Binding Pedidos.Pedidos}"
-                                  SelectedItem="{Binding Pedidos.PedidoSeleccionado}"
-                                  AutoGenerateColumns="False"
-                                  IsReadOnly="True">
+          ItemsSource="{Binding Pedidos.Pedidos}"
+          SelectedItem="{Binding Pedidos.PedidoSeleccionado}"
+          AutoGenerateColumns="False"
+          IsReadOnly="True"
+          HorizontalScrollBarVisibility="Auto"
+          VerticalScrollBarVisibility="Auto">
 
                             <DataGrid.Columns>
 
+                                <!-- ID DEL PEDIDO -->
                                 <DataGridTextColumn
-                                    Header="ID"
-                                    Binding="{Binding PedidoID}"
-                                    Width="60"/>
+            Header="ID"
+            Binding="{Binding PedidoID}"
+            Width="70"/>
 
+                                <!-- CLIENTE ID -->
                                 <DataGridTextColumn
-                                    Header="Cliente"
-                                    Binding="{Binding Cliente}"
-                                    Width="200"/>
+            Header="Cliente ID"
+            Binding="{Binding ClienteID}"
+            Width="80"/>
 
+                                <!-- CLIENTE -->
                                 <DataGridTextColumn
-                                    Header="Empleado"
-                                    Binding="{Binding Empleado}"
-                                    Width="180"/>
+            Header="Cliente"
+            Binding="{Binding Cliente}"
+            Width="180"/>
 
+                                <!-- EMPLEADO ID -->
                                 <DataGridTextColumn
-                                    Header="Fecha pedido"
-                                    Binding="{Binding FechaPedido, StringFormat=d}"
-                                    Width="120"/>
+            Header="Empleado ID"
+            Binding="{Binding EmpleadoID}"
+            Width="90"/>
 
+                                <!-- EMPLEADO -->
                                 <DataGridTextColumn
-                                    Header="Fecha requerida"
-                                    Binding="{Binding FechaRequerida, StringFormat=d}"
-                                    Width="120"/>
+            Header="Empleado"
+            Binding="{Binding Empleado}"
+            Width="160"/>
 
+                                <!-- FECHA PEDIDO -->
                                 <DataGridTextColumn
-                                    Header="Transportista"
-                                    Binding="{Binding Transportista}"
-                                    Width="180"/>
+            Header="Fecha pedido"
+            Binding="{Binding FechaPedido, StringFormat={}{0:dd/MM/yyyy}}"
+            Width="110"/>
 
+                                <!-- FECHA REQUERIDA -->
                                 <DataGridTextColumn
-                                    Header="Ciudad"
-                                    Binding="{Binding CiudadDestino}"
-                                    Width="120"/>
+            Header="Fecha requerida"
+            Binding="{Binding FechaRequerida, StringFormat={}{0:dd/MM/yyyy}}"
+            Width="120"/>
+
+                                <!-- FECHA ENVÍO -->
+                                <DataGridTextColumn
+            Header="Fecha envío"
+            Binding="{Binding FechaEnvio, StringFormat={}{0:dd/MM/yyyy}}"
+            Width="110"/>
+
+                                <!-- TRANSPORTISTA ID -->
+                                <DataGridTextColumn
+            Header="Transportista ID"
+            Binding="{Binding TransportistaID}"
+            Width="110"/>
+
+                                <!-- TRANSPORTISTA -->
+                                <DataGridTextColumn
+            Header="Transportista"
+            Binding="{Binding Transportista}"
+            Width="180"/>
+
+                                <!-- DESTINATARIO -->
+                                <DataGridTextColumn
+            Header="Destinatario"
+            Binding="{Binding Destinatario}"
+            Width="180"/>
+
+                                <!-- CIUDAD DESTINO -->
+                                <DataGridTextColumn
+            Header="Ciudad destino"
+            Binding="{Binding CiudadDestino}"
+            Width="140"/>
+
+                                <!-- PAÍS DESTINO -->
+                                <DataGridTextColumn
+            Header="País destino"
+            Binding="{Binding PaisDestino}"
+            Width="120"/>
 
                             </DataGrid.Columns>
 
@@ -644,96 +744,111 @@
                         <!-- FILTRO REPORTE -->
 
                         <Border Grid.Row="2"
-                                Background="#F8FAFC"
-                                BorderBrush="#E2E8F0"
-                                BorderThickness="1"
-                                CornerRadius="8"
-                                Padding="15"
-                                Margin="0,15,0,10">
+        Background="#F8FAFC"
+        BorderBrush="#E2E8F0"
+        BorderThickness="1"
+        CornerRadius="8"
+        Padding="15"
+        Margin="0,15,0,10">
 
                             <StackPanel Orientation="Horizontal">
 
                                 <TextBlock Text="Reporte por fechas"
-                                           FontSize="14"
-                                           FontWeight="Bold"
-                                           Foreground="#334155"
-                                           VerticalAlignment="Center"
-                                           Margin="0,0,25,0"/>
+                   FontSize="14"
+                   FontWeight="Bold"
+                   Foreground="#334155"
+                   VerticalAlignment="Center"
+                   Margin="0,0,25,0"/>
 
                                 <TextBlock Text="Desde:"
-                                           Style="{StaticResource LabelStyle}"
-                                           Margin="0,0,7,0"/>
+                   Style="{StaticResource LabelStyle}"
+                   VerticalAlignment="Center"
+                   Margin="0,0,7,0"/>
 
-                                <DatePicker SelectedDate="{Binding Pedidos.FechaInicio}"
-                                            Width="130"
-                                            Margin="0,0,20,0"/>
+                                <DatePicker SelectedDate="{Binding Pedidos.FechaInicio, Mode=TwoWay}"
+                    Width="130"
+                    Margin="0,0,20,0"/>
 
                                 <TextBlock Text="Hasta:"
-                                           Style="{StaticResource LabelStyle}"
-                                           Margin="0,0,7,0"/>
+                   Style="{StaticResource LabelStyle}"
+                   VerticalAlignment="Center"
+                   Margin="0,0,7,0"/>
 
-                                <DatePicker SelectedDate="{Binding Pedidos.FechaFin}"
-                                            Width="130"
-                                            Margin="0,0,20,0"/>
+                                <DatePicker SelectedDate="{Binding Pedidos.FechaFin, Mode=TwoWay}"
+                    Width="130"
+                    Margin="0,0,20,0"/>
 
                                 <Button Content="Generar reporte"
-                                        Width="135"
-                                        Style="{StaticResource ReportButtonStyle}"
-                                        Click="GenerarReporte_Click"/>
+                Width="135"
+                Style="{StaticResource ReportButtonStyle}"
+                Click="GenerarReporte_Click"/>
 
                             </StackPanel>
 
                         </Border>
 
 
+
                         <!-- REPORTE -->
 
-                        <DataGrid Grid.Row="3"
-                                  ItemsSource="{Binding Pedidos.ReporteDetalles}"
-                                  AutoGenerateColumns="False"
-                                  IsReadOnly="True">
+                        <!-- REPORTE DETALLADO -->
 
-                            <DataGrid.Columns>
+                        <Border Grid.Row="3"
+        Background="White"
+        BorderBrush="#E2E8F0"
+        BorderThickness="1"
+        CornerRadius="8"
+        Padding="5">
 
-                                <DataGridTextColumn
-                                    Header="Pedido"
-                                    Binding="{Binding PedidoID}"
-                                    Width="70"/>
+                            <DataGrid ItemsSource="{Binding Pedidos.ReporteDetalles}"
+              AutoGenerateColumns="False"
+              IsReadOnly="True"
+              CanUserAddRows="False"
+              HorizontalScrollBarVisibility="Auto"
+              VerticalScrollBarVisibility="Auto">
 
-                                <DataGridTextColumn
-                                    Header="Fecha"
-                                    Binding="{Binding FechaPedido, StringFormat=d}"
-                                    Width="100"/>
+                                <DataGrid.Columns>
 
-                                <DataGridTextColumn
-                                    Header="Producto"
-                                    Binding="{Binding NombreProducto}"
-                                    Width="250"/>
+                                    <!-- PEDIDO -->
+                                    <DataGridTextColumn Header="Pedido"
+                                Binding="{Binding PedidoID}"
+                                Width="80"/>
 
-                                <DataGridTextColumn
-                                    Header="Precio"
-                                    Binding="{Binding PrecioUnidad}"
-                                    Width="100"/>
+                                    <!-- FECHA -->
+                                    <DataGridTextColumn Header="Fecha"
+                                Binding="{Binding FechaPedido, StringFormat={}{0:dd/MM/yyyy}}"
+                                Width="110"/>
 
-                                <DataGridTextColumn
-                                    Header="Cantidad"
-                                    Binding="{Binding Cantidad}"
-                                    Width="90"/>
+                                    <!-- PRODUCTO -->
+                                    <DataGridTextColumn Header="Producto"
+                                Binding="{Binding NombreProducto}"
+                                Width="250"/>
 
-                                <DataGridTextColumn
-                                    Header="Descuento"
-                                    Binding="{Binding Descuento}"
-                                    Width="100"/>
+                                    <!-- PRECIO -->
+                                    <DataGridTextColumn Header="Precio"
+                                Binding="{Binding PrecioUnidad, StringFormat={}{0:F2}}"
+                                Width="100"/>
 
-                                <DataGridTextColumn
-                                    Header="Subtotal"
-                                    Binding="{Binding Subtotal}"
-                                    Width="120"/>
+                                    <!-- CANTIDAD -->
+                                    <DataGridTextColumn Header="Cantidad"
+                                Binding="{Binding Cantidad}"
+                                Width="90"/>
 
-                            </DataGrid.Columns>
+                                    <!-- DESCUENTO -->
+                                    <DataGridTextColumn Header="Descuento"
+                                Binding="{Binding Descuento, StringFormat={}{0:F2}}"
+                                Width="100"/>
 
-                        </DataGrid>
+                                    <!-- SUBTOTAL -->
+                                    <DataGridTextColumn Header="Subtotal"
+                                Binding="{Binding Subtotal, StringFormat={}{0:F2}}"
+                                Width="120"/>
 
+                                </DataGrid.Columns>
+
+                            </DataGrid>
+
+                        </Border>
                     </Grid>
 
                 </TabItem>

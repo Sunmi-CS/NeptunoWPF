@@ -5,11 +5,74 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Producto"
-        Height="760"
-        Width="900"
+        Height="720"
+        Width="850"
+        MinHeight="650"
+        MinWidth="750"
         WindowStartupLocation="CenterOwner"
-        ResizeMode="NoResize"
+        ResizeMode="CanResize"
         Background="#F5F7FA">
+
+    <Window.Resources>
+
+        <!-- Estilo general para etiquetas -->
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#243B5A"/>
+            <Setter Property="Margin" Value="0,0,0,7"/>
+        </Style>
+
+        <!-- Estilo para TextBox -->
+        <Style x:Key="InputStyle" TargetType="TextBox">
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderBrush" Value="#CCD6E2"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+
+        <!-- Estilo para ComboBox -->
+        <Style x:Key="ComboStyle" TargetType="ComboBox">
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderBrush" Value="#CCD6E2"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+
+        <!-- Botón Guardar -->
+        <Style x:Key="GuardarButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="130"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#2563EB"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
+        <!-- Botón Cancelar -->
+        <Style x:Key="CancelarButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="130"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#243B5A"/>
+            <Setter Property="Background" Value="#E5E7EB"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
+    </Window.Resources>
+
 
     <Grid Margin="28">
 
@@ -26,26 +89,54 @@
 
         <Border Grid.Row="0"
                 Background="White"
-                CornerRadius="12"
-                Padding="22"
-                Margin="0,0,0,20"
-                BorderBrush="#E1E6ED"
-                BorderThickness="1">
+                BorderBrush="#DCE5F0"
+                BorderThickness="1"
+                CornerRadius="14"
+                Padding="25"
+                Margin="0,0,0,22">
 
-            <StackPanel>
+            <Grid>
 
-                <TextBlock x:Name="TituloFormulario"
-                           Text="Nuevo producto"
-                           FontSize="26"
-                           FontWeight="Bold"
-                           Foreground="#1F365C"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="70"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Ingrese los datos del producto"
-                           FontSize="14"
-                           Foreground="#718096"
-                           Margin="0,6,0,0"/>
+                <!-- Icono -->
+                <Border Grid.Column="0"
+                        Width="58"
+                        Height="58"
+                        CornerRadius="12"
+                        Background="#2563EB"
+                        HorizontalAlignment="Left">
 
-            </StackPanel>
+                    <TextBlock Text="▣"
+                               Foreground="White"
+                               FontSize="30"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"/>
+                </Border>
+
+                <!-- Título -->
+                <StackPanel Grid.Column="1"
+                            Margin="18,0,0,0"
+                            VerticalAlignment="Center">
+
+                    <TextBlock x:Name="TituloFormulario"
+                               Text="Nuevo producto"
+                               FontSize="26"
+                               FontWeight="Bold"
+                               Foreground="#1E3555"/>
+
+                    <TextBlock Text="Ingrese los datos del producto"
+                               FontSize="14"
+                               Foreground="#718096"
+                               Margin="0,5,0,0"/>
+
+                </StackPanel>
+
+            </Grid>
 
         </Border>
 
@@ -56,10 +147,10 @@
 
         <Border Grid.Row="1"
                 Background="White"
-                CornerRadius="12"
-                Padding="28"
-                BorderBrush="#E1E6ED"
-                BorderThickness="1">
+                BorderBrush="#DCE5F0"
+                BorderThickness="1"
+                CornerRadius="14"
+                Padding="25">
 
             <ScrollViewer VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled">
@@ -74,61 +165,25 @@
 
 
                     <!-- ================================================= -->
-                    <!-- FILA 1 - ID / NOMBRE -->
+                    <!-- COLUMNA IZQUIERDA -->
                     <!-- ================================================= -->
 
-                    <StackPanel Grid.Row="0"
-                                Grid.Column="0"
-                                Margin="0,0,15,18">
+                    <StackPanel Grid.Column="0"
+                                Margin="0,0,15,0">
 
-                        <TextBlock Text="ID del producto"
-                                   FontWeight="SemiBold"
-                                   Foreground="#243B64"
-                                   Margin="0,0,0,6"/>
-
-                        <TextBox Text="{Binding Producto.ProductoID}"
-                                 IsReadOnly="True"
-                                 Background="#F1F3F6"
-                                 Foreground="#667085"
-                                 BorderBrush="#D0D5DD"
-                                 Height="42"
-                                 Padding="10"
-                                 FontSize="14"/>
-
-                    </StackPanel>
-
-
-                    <StackPanel Grid.Row="0"
-                                Grid.Column="1"
-                                Margin="15,0,0,18">
-
+                        <!-- Nombre -->
                         <TextBlock Text="Nombre del producto"
-                                   FontWeight="SemiBold"
-                                   Foreground="#243B64"
-                                   Margin="0,0,0,6"/>
+                                   Style="{StaticResource LabelStyle}"/>
 
                         <TextBox Text="{Binding Producto.NombreProducto,
                                                 UpdateSourceTrigger=PropertyChanged}"
                                  MaxLength="60"
-                                 Height="42"
-                                 Padding="10"
-                                 FontSize="14"/>
-
-                    </StackPanel>
+                                 Style="{StaticResource InputStyle}"/>
 
 
-                    <!-- ================================================= -->
-                    <!-- FILA 2 - PROVEEDOR / CATEGORÍA -->
-                    <!-- ================================================= -->
-
-                    <StackPanel Grid.Row="1"
-                                Grid.Column="0"
-                                Margin="0,0,15,18">
-
+                        <!-- Proveedor -->
                         <TextBlock Text="Proveedor"
-                                   FontWeight="SemiBold"
-                                   Foreground="#243B64"
-                                   Margin="0,0,0,6"/>
+                                   Style="{StaticResource LabelStyle}"/>
 
                         <ComboBox ItemsSource="{Binding Proveedores}"
                                   DisplayMemberPath="CompaniaNombre"
@@ -136,20 +191,49 @@
                                   SelectedValue="{Binding Producto.ProveedorID,
                                                           Mode=TwoWay,
                                                           UpdateSourceTrigger=PropertyChanged}"
-                                  Height="42"
-                                  FontSize="14"/>
+                                  Style="{StaticResource ComboStyle}"/>
+
+
+                        <!-- Cantidad por unidad -->
+                        <TextBlock Text="Cantidad por unidad"
+                                   Style="{StaticResource LabelStyle}"/>
+
+                        <TextBox Text="{Binding Producto.CantidadPorUnidad,
+                                                UpdateSourceTrigger=PropertyChanged}"
+                                 MaxLength="30"
+                                 Style="{StaticResource InputStyle}"/>
+
+
+                        <!-- Precio -->
+                        <TextBlock Text="Precio por unidad"
+                                   Style="{StaticResource LabelStyle}"/>
+
+                        <TextBox Text="{Binding Producto.PrecioUnidad,
+                                                UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource InputStyle}"/>
+
+
+                        <!-- Unidades en existencia -->
+                        <TextBlock Text="Unidades en existencia"
+                                   Style="{StaticResource LabelStyle}"/>
+
+                        <TextBox Text="{Binding Producto.UnidadesEnExistencia,
+                                                UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource InputStyle}"/>
 
                     </StackPanel>
 
 
-                    <StackPanel Grid.Row="1"
-                                Grid.Column="1"
-                                Margin="15,0,0,18">
+                    <!-- ================================================= -->
+                    <!-- COLUMNA DERECHA -->
+                    <!-- ================================================= -->
 
+                    <StackPanel Grid.Column="1"
+                                Margin="15,0,0,0">
+
+                        <!-- Categoría -->
                         <TextBlock Text="Categoría"
-                                   FontWeight="SemiBold"
-                                   Foreground="#243B64"
-                                   Margin="0,0,0,6"/>
+                                   Style="{StaticResource LabelStyle}"/>
 
                         <ComboBox ItemsSource="{Binding Categorias}"
                                   DisplayMemberPath="NombreCategoria"
@@ -157,130 +241,62 @@
                                   SelectedValue="{Binding Producto.CategoriaID,
                                                           Mode=TwoWay,
                                                           UpdateSourceTrigger=PropertyChanged}"
-                                  Height="42"
-                                  FontSize="14"/>
-
-                    </StackPanel>
+                                  Style="{StaticResource ComboStyle}"/>
 
 
-                    <!-- ================================================= -->
-                    <!-- FILA 3 - CANTIDAD / PRECIO -->
-                    <!-- ================================================= -->
-
-                    <StackPanel Grid.Row="2"
-                                Grid.Column="0"
-                                Margin="0,0,15,18">
-
-                        <TextBlock Text="Cantidad por unidad"
-                                   FontWeight="SemiBold"
-                                   Foreground="#243B64"
-                                   Margin="0,0,0,6"/>
-
-                        <TextBox Text="{Binding Producto.CantidadPorUnidad,
-                                                UpdateSourceTrigger=PropertyChanged}"
-                                 MaxLength="30"
-                                 Height="42"
-                                 Padding="10"
-                                 FontSize="14"/>
-
-                    </StackPanel>
-
-
-                    <StackPanel Grid.Row="2"
-                                Grid.Column="1"
-                                Margin="15,0,0,18">
-
-                        <TextBlock Text="Precio por unidad"
-                                   FontWeight="SemiBold"
-                                   Foreground="#243B64"
-                                   Margin="0,0,0,6"/>
-
-                        <TextBox Text="{Binding Producto.PrecioUnidad,
-                                                UpdateSourceTrigger=PropertyChanged}"
-                                 Height="42"
-                                 Padding="10"
-                                 FontSize="14"/>
-
-                    </StackPanel>
-
-
-                    <!-- ================================================= -->
-                    <!-- FILA 4 - EXISTENCIA / PEDIDO -->
-                    <!-- ================================================= -->
-
-                    <StackPanel Grid.Row="3"
-                                Grid.Column="0"
-                                Margin="0,0,15,18">
-
-                        <TextBlock Text="Unidades en existencia"
-                                   FontWeight="SemiBold"
-                                   Foreground="#243B64"
-                                   Margin="0,0,0,6"/>
-
-                        <TextBox Text="{Binding Producto.UnidadesEnExistencia,
-                                                UpdateSourceTrigger=PropertyChanged}"
-                                 Height="42"
-                                 Padding="10"
-                                 FontSize="14"/>
-
-                    </StackPanel>
-
-
-                    <StackPanel Grid.Row="3"
-                                Grid.Column="1"
-                                Margin="15,0,0,18">
-
+                        <!-- Unidades en pedido -->
                         <TextBlock Text="Unidades en pedido"
-                                   FontWeight="SemiBold"
-                                   Foreground="#243B64"
-                                   Margin="0,0,0,6"/>
+                                   Style="{StaticResource LabelStyle}"/>
 
                         <TextBox Text="{Binding Producto.UnidadesEnPedido,
                                                 UpdateSourceTrigger=PropertyChanged}"
-                                 Height="42"
-                                 Padding="10"
-                                 FontSize="14"/>
-
-                    </StackPanel>
+                                 Style="{StaticResource InputStyle}"/>
 
 
-                    <!-- ================================================= -->
-                    <!-- FILA 5 - REORDEN / DESCONTINUADO -->
-                    <!-- ================================================= -->
-
-                    <StackPanel Grid.Row="4"
-                                Grid.Column="0"
-                                Margin="0,0,15,18">
-
+                        <!-- Nivel de reorden -->
                         <TextBlock Text="Nivel de reorden"
-                                   FontWeight="SemiBold"
-                                   Foreground="#243B64"
-                                   Margin="0,0,0,6"/>
+                                   Style="{StaticResource LabelStyle}"/>
 
                         <TextBox Text="{Binding Producto.NivelDeReorden,
                                                 UpdateSourceTrigger=PropertyChanged}"
-                                 Height="42"
-                                 Padding="10"
-                                 FontSize="14"/>
-
-                    </StackPanel>
+                                 Style="{StaticResource InputStyle}"/>
 
 
-                    <StackPanel Grid.Row="4"
-                                Grid.Column="1"
-                                Margin="15,0,0,18">
-
+                        <!-- Estado -->
                         <TextBlock Text="Estado del producto"
-                                   FontWeight="SemiBold"
-                                   Foreground="#243B64"
-                                   Margin="0,0,0,12"/>
+                                   Style="{StaticResource LabelStyle}"/>
 
-                        <CheckBox Content="Producto descontinuado"
-                                  IsChecked="{Binding Producto.Descontinuado,
-                                                      Mode=TwoWay,
-                                                      UpdateSourceTrigger=PropertyChanged}"
-                                  FontSize="14"
-                                  VerticalAlignment="Center"/>
+                        <Border Height="42"
+                                Background="#F8FAFC"
+                                BorderBrush="#CCD6E2"
+                                BorderThickness="1"
+                                CornerRadius="4"
+                                Padding="12,0"
+                                Margin="0,0,0,20">
+
+                            <CheckBox Content="Producto descontinuado"
+                                      IsChecked="{Binding Producto.Descontinuado,
+                                                          Mode=TwoWay,
+                                                          UpdateSourceTrigger=PropertyChanged}"
+                                      VerticalAlignment="Center"
+                                      FontSize="14"
+                                      Foreground="#243B5A"/>
+
+                        </Border>
+
+
+                        <!-- Información -->
+                        <Border Background="#F1F5F9"
+                                CornerRadius="8"
+                                Padding="12"
+                                Margin="0,0,0,10">
+
+                            <TextBlock Text="Los campos numéricos deben contener valores válidos. El ID del producto se genera automáticamente."
+                                       TextWrapping="Wrap"
+                                       FontSize="12"
+                                       Foreground="#64748B"/>
+
+                        </Border>
 
                     </StackPanel>
 
@@ -297,34 +313,22 @@
 
         <Border Grid.Row="2"
                 Background="White"
-                CornerRadius="12"
+                BorderBrush="#DCE5F0"
+                BorderThickness="1"
+                CornerRadius="14"
                 Padding="20"
-                Margin="0,20,0,0"
-                BorderBrush="#E1E6ED"
-                BorderThickness="1">
+                Margin="0,20,0,0">
 
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
 
                 <Button Content="Cancelar"
-                        Width="120"
-                        Height="42"
-                        Margin="0,0,12,0"
-                        Background="#E5E7EB"
-                        Foreground="#243B64"
-                        BorderThickness="0"
-                        FontWeight="SemiBold"
-                        FontSize="14"
-                        Click="Cancelar_Click"/>
+                        Style="{StaticResource CancelarButtonStyle}"
+                        Click="Cancelar_Click"
+                        Margin="0,0,12,0"/>
 
                 <Button Content="Guardar"
-                        Width="140"
-                        Height="42"
-                        Background="#2563EB"
-                        Foreground="White"
-                        BorderThickness="0"
-                        FontWeight="SemiBold"
-                        FontSize="14"
+                        Style="{StaticResource GuardarButtonStyle}"
                         Click="Guardar_Click"/>
 
             </StackPanel>
