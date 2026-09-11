@@ -78,13 +78,17 @@ END;
 GO
 
 -- Actualizar producto
-CREATE OR ALTER PROCEDURE sp_Productos_Actualizar
+CREATE OR ALTER PROCEDURE dbo.sp_Productos_Actualizar
     @ProductoID INT,
     @NombreProducto NVARCHAR(60),
     @ProveedorID INT,
     @CategoriaID INT,
+    @CantidadPorUnidad NVARCHAR(30),
     @PrecioUnidad DECIMAL(10,2),
-    @UnidadesEnExistencia SMALLINT
+    @UnidadesEnExistencia SMALLINT,
+    @UnidadesEnPedido SMALLINT,
+    @NivelDeReorden SMALLINT,
+    @Descontinuado BIT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -94,12 +98,15 @@ BEGIN
         NombreProducto = @NombreProducto,
         ProveedorID = @ProveedorID,
         CategoriaID = @CategoriaID,
+        CantidadPorUnidad = @CantidadPorUnidad,
         PrecioUnidad = @PrecioUnidad,
-        UnidadesEnExistencia = @UnidadesEnExistencia
+        UnidadesEnExistencia = @UnidadesEnExistencia,
+        UnidadesEnPedido = @UnidadesEnPedido,
+        NivelDeReorden = @NivelDeReorden,
+        Descontinuado = @Descontinuado
     WHERE ProductoID = @ProductoID;
 END;
 GO
-
 -- Eliminar producto
 CREATE OR ALTER PROCEDURE sp_Productos_Eliminar
     @ProductoID INT
@@ -486,7 +493,7 @@ END;
 GO
 
 -- Reporte de detalles de pedidos por fechas
-CREATE OR ALTER PROCEDURE sp_DetallePedidos_PorFechas
+CREATE OR ALTER PROCEDURE dbo.sp_DetallePedidos_PorFechas
     @FechaInicio DATE,
     @FechaFin DATE
 AS
@@ -495,8 +502,8 @@ BEGIN
 
     SELECT
         dp.PedidoID,
-        p.FechaPedido,
         dp.ProductoID,
+        p.FechaPedido,
         pr.NombreProducto,
         dp.PrecioUnidad,
         dp.Cantidad,
@@ -507,7 +514,8 @@ BEGIN
         ON dp.PedidoID = p.PedidoID
     INNER JOIN Productos pr
         ON dp.ProductoID = pr.ProductoID
-    WHERE p.FechaPedido BETWEEN @FechaInicio AND @FechaFin
+    WHERE p.FechaPedido >= @FechaInicio
+      AND p.FechaPedido <= @FechaFin
     ORDER BY p.FechaPedido, dp.PedidoID;
 END;
 GO
