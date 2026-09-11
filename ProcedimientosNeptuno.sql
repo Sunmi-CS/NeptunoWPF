@@ -6,7 +6,7 @@
 USE NeptunoDB;
 GO
 
-CREATE OR ALTER PROCEDURE sp_Productos_Listar
+CREATE OR ALTER PROCEDURE dbo.sp_Productos_Listar
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -34,7 +34,7 @@ END;
 GO
 
 -- Insertar producto
-CREATE OR ALTER PROCEDURE sp_Productos_Insertar
+CREATE OR ALTER PROCEDURE dbo.sp_Productos_Insertar
     @NombreProducto NVARCHAR(60),
     @ProveedorID INT = NULL,
     @CategoriaID INT = NULL,
