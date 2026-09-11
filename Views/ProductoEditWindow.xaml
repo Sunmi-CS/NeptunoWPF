@@ -1,77 +1,204 @@
 ﻿<Window x:Class="NeptunoWPF.Views.ProductoEditWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Producto"
-        Height="500"
-        Width="500"
-        WindowStartupLocation="CenterOwner">
+        Title="Nuevo Producto"
+        Height="654"
+        Width="520"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#F5F7FA">
 
-    <Grid Margin="20">
+    <Window.Resources>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <!-- TextBox -->
+        <Style TargetType="TextBox">
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#D1D5DB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
 
-        <TextBlock Text="Nombre del producto"/>
-        <TextBox Grid.Row="1"
-                 Margin="0,5,0,10"
-                 Text="{Binding Producto.NombreProducto,
-                        UpdateSourceTrigger=PropertyChanged}"/>
+        <!-- ComboBox -->
+        <Style TargetType="ComboBox">
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#D1D5DB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
 
-        <TextBlock Grid.Row="2"
-                   Text="Cantidad por unidad"/>
+        <!-- Etiquetas -->
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#374151"/>
+        </Style>
 
-        <TextBox Grid.Row="3"
-                 Margin="0,5,0,10"
-                 Text="{Binding Producto.CantidadPorUnidad,
-                        UpdateSourceTrigger=PropertyChanged}"/>
+        <!-- Guardar -->
+        <Style x:Key="GuardarButton"
+               TargetType="Button">
+            <Setter Property="Width" Value="110"/>
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="Background" Value="#2563EB"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
 
-        <TextBlock Grid.Row="4"
-                   Text="Precio"/>
+        <!-- Cancelar -->
+        <Style x:Key="CancelarButton"
+               TargetType="Button">
+            <Setter Property="Width" Value="110"/>
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="Background" Value="#E5E7EB"/>
+            <Setter Property="Foreground" Value="#374151"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
 
-        <TextBox Grid.Row="5"
-                 Margin="0,5,0,10"
-                 Text="{Binding Producto.PrecioUnidad,
-                        UpdateSourceTrigger=PropertyChanged}"/>
+    </Window.Resources>
 
-        <TextBlock Grid.Row="6"
-                   Text="Unidades en existencia"/>
+    <Border Margin="18"
+            Background="White"
+            CornerRadius="12"
+            BorderBrush="#E5E7EB"
+            BorderThickness="1">
 
-        <TextBox Grid.Row="7"
-                 Margin="0,5,0,10"
-                 Text="{Binding Producto.UnidadesEnExistencia,
-                        UpdateSourceTrigger=PropertyChanged}"/>
+        <Grid Margin="25">
 
-        <CheckBox Grid.Row="8"
-                  Content="Descontinuado"
-                  IsChecked="{Binding Producto.Descontinuado}"
-                  Margin="0,5,0,10"/>
+            <!-- AHORA SÍ SON 14 FILAS: 0 HASTA 13 -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="9"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom">
 
-            <Button Content="Guardar"
-                    Width="100"
-                    Margin="0,0,10,0"
-                    Click="Guardar_Click"/>
+            <!-- ENCABEZADO -->
+            <StackPanel Grid.Row="0"
+                        Margin="0,0,0,20">
 
-            <Button Content="Cancelar"
-                    Width="100"
-                    Click="Cancelar_Click"/>
+                <TextBlock x:Name="TituloFormulario"
+                           Text="Nuevo Producto"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           Foreground="#111827"/>
 
-        </StackPanel>
+                <TextBlock Text="Ingrese los datos del producto"
+                           Margin="0,4,0,0"
+                           FontSize="12"
+                           FontWeight="Normal"
+                           Foreground="#6B7280"/>
 
-    </Grid>
+            </StackPanel>
+
+
+            <!-- ID -->
+            <TextBlock Grid.Row="1"
+                       Text="ID del producto"/>
+
+            <TextBox Grid.Row="2"
+                     Margin="0,5,0,12"
+                     Text="{Binding Producto.ProductoID}"
+                     IsReadOnly="True"
+                     Background="#F3F4F6"
+                     Foreground="#6B7280"/>
+
+
+            <!-- PRODUCTO -->
+            <TextBlock Grid.Row="3"
+                       Text="Nombre del producto"/>
+
+            <TextBox Grid.Row="4"
+                     Margin="0,5,0,12"
+                     Text="{Binding Producto.NombreProducto,
+                            UpdateSourceTrigger=PropertyChanged}"/>
+
+
+            <!-- PROVEEDOR -->
+            <TextBlock Grid.Row="5"
+                       Text="Proveedor"/>
+
+            <ComboBox Grid.Row="6"
+                      Margin="0,5,0,12"
+                      ItemsSource="{Binding Proveedores}"
+                      DisplayMemberPath="CompaniaNombre"
+                      SelectedValuePath="ProveedorID"
+                      SelectedValue="{Binding Producto.ProveedorID,
+                                               Mode=TwoWay,
+                                               UpdateSourceTrigger=PropertyChanged}"/>
+
+
+            <!-- CATEGORÍA -->
+            <TextBlock Grid.Row="7"
+                       Text="Categoría"/>
+
+            <ComboBox Grid.Row="8"
+                      Margin="0,5,0,12"
+                      ItemsSource="{Binding Categorias}"
+                      DisplayMemberPath="NombreCategoria"
+                      SelectedValuePath="CategoriaID"
+                      SelectedValue="{Binding Producto.CategoriaID,
+                                               Mode=TwoWay,
+                                               UpdateSourceTrigger=PropertyChanged}"/>
+
+
+            <!-- PRECIO -->
+            <TextBlock Grid.Row="9"
+                       Text="Precio"/>
+
+            <TextBox Grid.Row="10"
+                     Margin="0,5,0,12"
+                     Text="{Binding Producto.PrecioUnidad,
+                            UpdateSourceTrigger=PropertyChanged,
+                            StringFormat={}{0:F2}}"/>
+
+
+            <!-- STOCK -->
+            <TextBlock Grid.Row="11"
+                       Text="Stock"/>
+
+            <TextBox Grid.Row="12"
+                     Margin="0,5,0,20"
+                     Text="{Binding Producto.UnidadesEnExistencia,
+                            UpdateSourceTrigger=PropertyChanged}"/>
+
+
+            <!-- BOTONES -->
+            <StackPanel Grid.Row="13"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Margin="0,5,0,0">
+
+                <Button Content="Guardar"
+                        Style="{StaticResource GuardarButton}"
+                        Margin="0,0,10,0"
+                        Click="Guardar_Click"/>
+
+                <Button Content="Cancelar"
+                        Style="{StaticResource CancelarButton}"
+                        Click="Cancelar_Click"/>
+
+            </StackPanel>
+
+        </Grid>
+
+    </Border>
 
 </Window>

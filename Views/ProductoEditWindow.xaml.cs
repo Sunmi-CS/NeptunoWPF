@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-
-using NeptunoWPF.Models;
+﻿using NeptunoWPF.Models;
 using NeptunoWPF.ViewModels;
+using System.Collections.ObjectModel;
 using System.Windows;
 
 namespace NeptunoWPF.Views;
@@ -21,17 +10,31 @@ public partial class ProductoEditWindow : Window
     private readonly ProductoEditViewModel _viewModel;
 
     public ProductoEditWindow(
-        Producto producto,
-        bool esEdicion)
+    Producto producto,
+    bool esEdicion,
+    ObservableCollection<Categoria> categorias,
+    ObservableCollection<Proveedor> proveedores)
     {
         InitializeComponent();
 
-        _viewModel =
-            new ProductoEditViewModel(
-                producto,
-                esEdicion);
+        _viewModel = new ProductoEditViewModel(
+            producto,
+            esEdicion,
+            categorias,
+            proveedores);
 
         DataContext = _viewModel;
+
+        if (esEdicion)
+        {
+            Title = "Editar producto";
+            TituloFormulario.Text = "Editar producto";
+        }
+        else
+        {
+            Title = "Nuevo producto";
+            TituloFormulario.Text = "Nuevo producto";
+        }
     }
 
     private async void Guardar_Click(
@@ -40,15 +43,18 @@ public partial class ProductoEditWindow : Window
     {
         try
         {
-            await _viewModel.GuardarAsync();
+            bool guardado = await _viewModel.GuardarAsync();
 
-            DialogResult = true;
+            if (guardado)
+            {
+                DialogResult = true;
+            }
         }
         catch (Exception ex)
         {
             MessageBox.Show(
                 ex.Message,
-                "Error",
+                "Error al guardar",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
         }

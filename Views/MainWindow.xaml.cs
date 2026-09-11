@@ -113,16 +113,21 @@ public partial class MainWindow : Window
     }
 
     private void NuevoProducto_Click(
-        object sender,
-        RoutedEventArgs e)
+    object sender,
+    RoutedEventArgs e)
     {
         var ventana = new ProductoEditWindow(
             new Producto(),
-            false);
+            false,
+            _viewModel.Categorias.Categorias,
+            _viewModel.Proveedores.Proveedores);
 
-        ventana.ShowDialog();
+        ventana.Owner = this;
 
-        _ = _viewModel.Productos.CargarAsync();
+        if (ventana.ShowDialog() == true)
+        {
+            _ = _viewModel.Productos.CargarAsync();
+        }
     }
 
     private void EditarProducto_Click(
@@ -137,13 +142,17 @@ public partial class MainWindow : Window
 
         var ventana = new ProductoEditWindow(
             _viewModel.Productos.ProductoSeleccionado,
-            true);
+            true,
+            _viewModel.Categorias.Categorias,
+            _viewModel.Proveedores.Proveedores);
 
-        ventana.ShowDialog();
+        ventana.Owner = this;
 
-        _ = _viewModel.Productos.CargarAsync();
+        if (ventana.ShowDialog() == true)
+        {
+            _ = _viewModel.Productos.CargarAsync();
+        }
     }
-
     private void NuevoCategoria_Click(
         object sender,
         RoutedEventArgs e)

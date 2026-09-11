@@ -81,14 +81,10 @@ GO
 CREATE OR ALTER PROCEDURE sp_Productos_Actualizar
     @ProductoID INT,
     @NombreProducto NVARCHAR(60),
-    @ProveedorID INT = NULL,
-    @CategoriaID INT = NULL,
-    @CantidadPorUnidad NVARCHAR(30) = NULL,
+    @ProveedorID INT,
+    @CategoriaID INT,
     @PrecioUnidad DECIMAL(10,2),
-    @UnidadesEnExistencia SMALLINT,
-    @UnidadesEnPedido SMALLINT,
-    @NivelDeReorden SMALLINT,
-    @Descontinuado BIT
+    @UnidadesEnExistencia SMALLINT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -98,12 +94,8 @@ BEGIN
         NombreProducto = @NombreProducto,
         ProveedorID = @ProveedorID,
         CategoriaID = @CategoriaID,
-        CantidadPorUnidad = @CantidadPorUnidad,
         PrecioUnidad = @PrecioUnidad,
-        UnidadesEnExistencia = @UnidadesEnExistencia,
-        UnidadesEnPedido = @UnidadesEnPedido,
-        NivelDeReorden = @NivelDeReorden,
-        Descontinuado = @Descontinuado
+        UnidadesEnExistencia = @UnidadesEnExistencia
     WHERE ProductoID = @ProductoID;
 END;
 GO

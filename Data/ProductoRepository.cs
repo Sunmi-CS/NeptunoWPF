@@ -74,33 +74,41 @@ public class ProductoRepository : IProductoRepository
 
     public async Task<int> InsertarAsync(Producto producto)
     {
-        using var connection = new SqlConnection(DbConfig.ConnectionString);
+        using var connection =
+            new SqlConnection(DbConfig.ConnectionString);
 
-        using var command = new SqlCommand(
-            "sp_Productos_Insertar",
-            connection);
+        using var command =
+            new SqlCommand(
+                "sp_Productos_Insertar",
+                connection);
 
-        command.CommandType = CommandType.StoredProcedure;
+        command.CommandType =
+            CommandType.StoredProcedure;
 
         AgregarParametros(command, producto);
 
         await connection.OpenAsync();
 
-        return Convert.ToInt32(await command.ExecuteScalarAsync());
+        return Convert.ToInt32(
+            await command.ExecuteScalarAsync());
     }
-
     public async Task ActualizarAsync(Producto producto)
     {
-        using var connection = new SqlConnection(DbConfig.ConnectionString);
+        using var connection =
+            new SqlConnection(DbConfig.ConnectionString);
 
-        using var command = new SqlCommand(
-            "sp_Productos_Actualizar",
-            connection);
+        using var command =
+            new SqlCommand(
+                "sp_Productos_Actualizar",
+                connection);
 
-        command.CommandType = CommandType.StoredProcedure;
+        command.CommandType =
+            CommandType.StoredProcedure;
 
-        command.Parameters.Add("@ProductoID", SqlDbType.Int)
-            .Value = producto.ProductoID;
+        command.Parameters.Add(
+            "@ProductoID",
+            SqlDbType.Int).Value =
+            producto.ProductoID;
 
         AgregarParametros(command, producto);
 
@@ -108,7 +116,6 @@ public class ProductoRepository : IProductoRepository
 
         await command.ExecuteNonQueryAsync();
     }
-
     public async Task EliminarAsync(int productoId)
     {
         using var connection = new SqlConnection(DbConfig.ConnectionString);
@@ -131,17 +138,21 @@ public class ProductoRepository : IProductoRepository
         SqlCommand command,
         Producto producto)
     {
-        command.Parameters.Add("@NombreProducto", SqlDbType.NVarChar, 60)
-            .Value = producto.NombreProducto;
+        command.Parameters.Add(
+            "@NombreProducto",
+            SqlDbType.NVarChar,
+            60).Value =
+            producto.NombreProducto;
 
-        command.Parameters.Add("@ProveedorID", SqlDbType.Int)
-            .Value = (object?)producto.ProveedorID ?? DBNull.Value;
+        command.Parameters.Add(
+            "@ProveedorID",
+            SqlDbType.Int).Value =
+            producto.ProveedorID!.Value;
 
-        command.Parameters.Add("@CategoriaID", SqlDbType.Int)
-            .Value = (object?)producto.CategoriaID ?? DBNull.Value;
-
-        command.Parameters.Add("@CantidadPorUnidad", SqlDbType.NVarChar, 30)
-            .Value = (object?)producto.CantidadPorUnidad ?? DBNull.Value;
+        command.Parameters.Add(
+            "@CategoriaID",
+            SqlDbType.Int).Value =
+            producto.CategoriaID!.Value;
 
         var precio = command.Parameters.Add(
             "@PrecioUnidad",
@@ -151,16 +162,9 @@ public class ProductoRepository : IProductoRepository
         precio.Scale = 2;
         precio.Value = producto.PrecioUnidad;
 
-        command.Parameters.Add("@UnidadesEnExistencia", SqlDbType.SmallInt)
-            .Value = producto.UnidadesEnExistencia;
-
-        command.Parameters.Add("@UnidadesEnPedido", SqlDbType.SmallInt)
-            .Value = producto.UnidadesEnPedido;
-
-        command.Parameters.Add("@NivelDeReorden", SqlDbType.SmallInt)
-            .Value = producto.NivelDeReorden;
-
-        command.Parameters.Add("@Descontinuado", SqlDbType.Bit)
-            .Value = producto.Descontinuado;
+        command.Parameters.Add(
+            "@UnidadesEnExistencia",
+            SqlDbType.SmallInt).Value =
+            producto.UnidadesEnExistencia;
     }
 }

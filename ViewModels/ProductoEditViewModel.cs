@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using NeptunoWPF.Data;
+﻿using NeptunoWPF.Data;
 using NeptunoWPF.Models;
+using System.Collections.ObjectModel;
 using System.Windows;
 
 namespace NeptunoWPF.ViewModels;
@@ -16,33 +13,79 @@ public class ProductoEditViewModel : ViewModelBase
 
     public bool EsEdicion { get; }
 
+    public ObservableCollection<Categoria> Categorias { get; }
+    public ObservableCollection<Proveedor> Proveedores { get; }
+
     public ProductoEditViewModel(
         Producto producto,
-        bool esEdicion)
+        bool esEdicion,
+        ObservableCollection<Categoria> categorias,
+        ObservableCollection<Proveedor> proveedores)
     {
         _repository = new ProductoRepository();
 
         Producto = producto;
         EsEdicion = esEdicion;
+
+        Categorias = categorias;
+        Proveedores = proveedores;
     }
 
-    public async Task GuardarAsync()
+    public async Task<bool> GuardarAsync()
     {
-        if (string.IsNullOrWhiteSpace(
-            Producto.NombreProducto))
+        if (string.IsNullOrWhiteSpace(Producto.NombreProducto))
         {
             MessageBox.Show(
-                "El nombre del producto es obligatorio.");
+                "El nombre del producto es obligatorio.",
+                "Validación",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
 
-            return;
+            return false;
+        }
+
+        if (Producto.ProveedorID == null)
+        {
+            MessageBox.Show(
+                "Selecciona un proveedor.",
+                "Validación",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+
+            return false;
+        }
+
+        if (Producto.CategoriaID == null)
+        {
+            MessageBox.Show(
+                "Selecciona una categoría.",
+                "Validación",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+
+            return false;
         }
 
         if (Producto.PrecioUnidad < 0)
         {
             MessageBox.Show(
-                "El precio no puede ser negativo.");
+                "El precio no puede ser negativo.",
+                "Validación",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
 
-            return;
+            return false;
+        }
+
+        if (Producto.UnidadesEnExistencia < 0)
+        {
+            MessageBox.Show(
+                "El stock no puede ser negativo.",
+                "Validación",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+
+            return false;
         }
 
         if (EsEdicion)
@@ -51,7 +94,10 @@ public class ProductoEditViewModel : ViewModelBase
         }
         else
         {
-            await _repository.InsertarAsync(Producto);
+            Producto.ProductoID =
+                await _repository.InsertarAsync(Producto);
         }
+
+        return true;
     }
 }
