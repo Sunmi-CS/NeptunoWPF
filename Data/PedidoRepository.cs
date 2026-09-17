@@ -130,8 +130,9 @@ public class PedidoRepository : IPedidoRepository
 
         await connection.OpenAsync();
 
-        return Convert.ToInt32(
-            await command.ExecuteScalarAsync());
+        await command.ExecuteNonQueryAsync();
+
+        return 1;
     }
 
     public async Task ActualizarAsync(Pedido pedido)

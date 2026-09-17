@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NeptunoWPF.Models;
 
@@ -31,4 +29,6 @@ public class Pedido
     public string? CiudadDestino { get; set; }
 
     public string? PaisDestino { get; set; }
+
+    public bool Activo { get; set; } = true;
 }

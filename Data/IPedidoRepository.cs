@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 
 using NeptunoWPF.Models;
 
@@ -12,17 +12,17 @@ public interface IPedidoRepository
 
     Task<int> InsertarAsync(Pedido pedido);
 
-    Task ActualizarAsync(Pedido pedido);
+    Task<int> ActualizarAsync(Pedido pedido);
 
-    Task EliminarAsync(int pedidoId);
-
-    Task<List<DetallePedidoReporte>> ReportePorFechasAsync(
-        DateTime fechaInicio,
-        DateTime fechaFin);
+    Task<int> EliminarAsync(int pedidoID);
 
     Task<List<Cliente>> ListarClientesAsync();
 
     Task<List<Empleado>> ListarEmpleadosAsync();
 
     Task<List<Transportista>> ListarTransportistasAsync();
+
+    Task<List<DetallePedidoReporte>> DetallePorFechasAsync(
+        DateTime fechaInicio,
+        DateTime fechaFin);
 }
