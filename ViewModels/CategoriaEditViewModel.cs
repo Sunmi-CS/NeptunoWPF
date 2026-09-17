@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
 
 using NeptunoWPF.Data;
 using NeptunoWPF.Models;
-using System.Windows;
 
 namespace NeptunoWPF.ViewModels;
 
@@ -26,24 +25,51 @@ public class CategoriaEditViewModel : ViewModelBase
         EsEdicion = esEdicion;
     }
 
-    public async Task GuardarAsync()
+    public async Task<bool> GuardarAsync()
     {
         if (string.IsNullOrWhiteSpace(
             Categoria.NombreCategoria))
         {
             MessageBox.Show(
-                "El nombre de la categoría es obligatorio.");
+                "El nombre de la categoría es obligatorio.",
+                "Validación",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
 
-            return;
+            return false;
         }
 
-        if (EsEdicion)
+        try
         {
-            await _repository.ActualizarAsync(Categoria);
+            if (EsEdicion)
+            {
+                await _repository.ActualizarAsync(Categoria);
+            }
+            else
+            {
+                await _repository.InsertarAsync(Categoria);
+            }
+
+            MessageBox.Show(
+                EsEdicion
+                    ? "Categoría actualizada correctamente."
+                    : "Categoría registrada correctamente.",
+                "Éxito",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            return true;
         }
-        else
+        catch (Exception ex)
         {
-            await _repository.InsertarAsync(Categoria);
+            MessageBox.Show(
+                "No se pudo guardar la categoría.\n\n"
+                + ex.Message,
+                "Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+
+            return false;
         }
     }
 }
