@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using NeptunoWPF.Models;
 
 namespace NeptunoWPF.Data;
@@ -12,7 +14,7 @@ public interface IProductoRepository
 
     Task<int> InsertarAsync(Producto producto);
 
-    Task ActualizarAsync(Producto producto);
+    Task<int> ActualizarAsync(Producto producto);
 
-    Task EliminarAsync(int productoId);
+    Task<int> EliminarAsync(int productoID);
 }

@@ -1,7 +1,9 @@
-﻿using NeptunoWPF.Data;
-using NeptunoWPF.Models;
-using System.Collections.ObjectModel;
+﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
+
+using NeptunoWPF.Data;
+using NeptunoWPF.Models;
 
 namespace NeptunoWPF.ViewModels;
 
@@ -13,22 +15,14 @@ public class ProductoEditViewModel : ViewModelBase
 
     public bool EsEdicion { get; }
 
-    public ObservableCollection<Categoria> Categorias { get; }
-    public ObservableCollection<Proveedor> Proveedores { get; }
-
     public ProductoEditViewModel(
         Producto producto,
-        bool esEdicion,
-        ObservableCollection<Categoria> categorias,
-        ObservableCollection<Proveedor> proveedores)
+        bool esEdicion)
     {
         _repository = new ProductoRepository();
 
         Producto = producto;
         EsEdicion = esEdicion;
-
-        Categorias = categorias;
-        Proveedores = proveedores;
     }
 
     public async Task<bool> GuardarAsync()
@@ -37,28 +31,6 @@ public class ProductoEditViewModel : ViewModelBase
         {
             MessageBox.Show(
                 "El nombre del producto es obligatorio.",
-                "Validación",
-                MessageBoxButton.OK,
-                MessageBoxImage.Warning);
-
-            return false;
-        }
-
-        if (Producto.ProveedorID == null)
-        {
-            MessageBox.Show(
-                "Selecciona un proveedor.",
-                "Validación",
-                MessageBoxButton.OK,
-                MessageBoxImage.Warning);
-
-            return false;
-        }
-
-        if (Producto.CategoriaID == null)
-        {
-            MessageBox.Show(
-                "Selecciona una categoría.",
                 "Validación",
                 MessageBoxButton.OK,
                 MessageBoxImage.Warning);
@@ -77,27 +49,36 @@ public class ProductoEditViewModel : ViewModelBase
             return false;
         }
 
-        if (Producto.UnidadesEnExistencia < 0)
+        try
+        {
+            if (EsEdicion)
+            {
+                await _repository.ActualizarAsync(Producto);
+            }
+            else
+            {
+                await _repository.InsertarAsync(Producto);
+            }
+
+            MessageBox.Show(
+                EsEdicion
+                    ? "Producto actualizado correctamente."
+                    : "Producto registrado correctamente.",
+                "Éxito",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            return true;
+        }
+        catch (Exception ex)
         {
             MessageBox.Show(
-                "El stock no puede ser negativo.",
-                "Validación",
+                "No se pudo guardar el producto.\n\n" + ex.Message,
+                "Error",
                 MessageBoxButton.OK,
-                MessageBoxImage.Warning);
+                MessageBoxImage.Error);
 
             return false;
         }
-
-        if (EsEdicion)
-        {
-            await _repository.ActualizarAsync(Producto);
-        }
-        else
-        {
-            Producto.ProductoID =
-                await _repository.InsertarAsync(Producto);
-        }
-
-        return true;
     }
 }

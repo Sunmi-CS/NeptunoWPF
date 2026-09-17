@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Windows;
 
 using NeptunoWPF.Data;
 using NeptunoWPF.Models;
-using System.Collections.ObjectModel;
-using System.Windows;
 
 namespace NeptunoWPF.ViewModels;
 
@@ -37,12 +36,16 @@ public class ProductoViewModel : ViewModelBase
             Productos.Clear();
 
             foreach (var producto in lista)
+            {
                 Productos.Add(producto);
+            }
+
+            ProductoSeleccionado = null;
         }
         catch (Exception ex)
         {
             MessageBox.Show(
-                ex.Message,
+                "No se pudieron cargar los productos.\n\n" + ex.Message,
                 "Error",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
@@ -52,11 +55,19 @@ public class ProductoViewModel : ViewModelBase
     public async Task EliminarAsync()
     {
         if (ProductoSeleccionado == null)
+        {
+            MessageBox.Show(
+                "Selecciona un producto.",
+                "Aviso",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+
             return;
+        }
 
         var respuesta = MessageBox.Show(
             "¿Deseas eliminar el producto seleccionado?",
-            "Confirmar",
+            "Confirmar eliminación",
             MessageBoxButton.YesNo,
             MessageBoxImage.Question);
 
@@ -69,14 +80,20 @@ public class ProductoViewModel : ViewModelBase
                 ProductoSeleccionado.ProductoID);
 
             await CargarAsync();
+
+            MessageBox.Show(
+                "Producto eliminado correctamente.",
+                "Éxito",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
         }
         catch (Exception ex)
         {
             MessageBox.Show(
-                ex.Message,
-                "No se pudo eliminar",
+                "No se pudo eliminar el producto.\n\n" + ex.Message,
+                "Error",
                 MessageBoxButton.OK,
-                MessageBoxImage.Warning);
+                MessageBoxImage.Error);
         }
     }
 }

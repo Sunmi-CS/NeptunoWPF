@@ -29,4 +29,6 @@ public class Producto
     public short NivelDeReorden { get; set; }
 
     public bool Descontinuado { get; set; }
+
+    public bool Activo { get; set; } = true;
 }

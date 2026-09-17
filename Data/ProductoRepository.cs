@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-
+using System.Data;
 using Microsoft.Data.SqlClient;
 using NeptunoWPF.Models;
-using System.Data;
 
 namespace NeptunoWPF.Data;
 
@@ -12,10 +10,9 @@ public class ProductoRepository : IProductoRepository
 {
     public async Task<List<Producto>> ListarAsync()
     {
-        var lista = new List<Producto>();
+        var productos = new List<Producto>();
 
         using var connection = new SqlConnection(DbConfig.ConnectionString);
-
         using var command = new SqlCommand(
             "sp_Productos_Listar",
             connection);
@@ -28,141 +25,172 @@ public class ProductoRepository : IProductoRepository
 
         while (await reader.ReadAsync())
         {
-            lista.Add(new Producto
+            productos.Add(new Producto
             {
-                ProductoID = reader.GetInt32(reader.GetOrdinal("ProductoID")),
-                NombreProducto = reader.GetString(reader.GetOrdinal("NombreProducto")),
+                ProductoID = Convert.ToInt32(reader["ProductoID"]),
+                NombreProducto = reader["NombreProducto"]?.ToString() ?? string.Empty,
 
-                ProveedorID = reader.IsDBNull(reader.GetOrdinal("ProveedorID"))
+                ProveedorID = reader["ProveedorID"] == DBNull.Value
                     ? null
-                    : reader.GetInt32(reader.GetOrdinal("ProveedorID")),
+                    : Convert.ToInt32(reader["ProveedorID"]),
 
-                Proveedor = reader.IsDBNull(reader.GetOrdinal("Proveedor"))
+                Proveedor = reader["Proveedor"]?.ToString(),
+
+                CategoriaID = reader["CategoriaID"] == DBNull.Value
                     ? null
-                    : reader.GetString(reader.GetOrdinal("Proveedor")),
+                    : Convert.ToInt32(reader["CategoriaID"]),
 
-                CategoriaID = reader.IsDBNull(reader.GetOrdinal("CategoriaID"))
-                    ? null
-                    : reader.GetInt32(reader.GetOrdinal("CategoriaID")),
+                Categoria = reader["Categoria"]?.ToString(),
 
-                Categoria = reader.IsDBNull(reader.GetOrdinal("Categoria"))
-                    ? null
-                    : reader.GetString(reader.GetOrdinal("Categoria")),
+                CantidadPorUnidad = reader["CantidadPorUnidad"]?.ToString(),
 
-                CantidadPorUnidad = reader.IsDBNull(reader.GetOrdinal("CantidadPorUnidad"))
-                    ? null
-                    : reader.GetString(reader.GetOrdinal("CantidadPorUnidad")),
+                PrecioUnidad = reader["PrecioUnidad"] == DBNull.Value
+                    ? 0
+                    : Convert.ToDecimal(reader["PrecioUnidad"]),
 
-                PrecioUnidad = reader.GetDecimal(reader.GetOrdinal("PrecioUnidad")),
+                UnidadesEnExistencia = reader["UnidadesEnExistencia"] == DBNull.Value
+                    ? (short)0
+                    : Convert.ToInt16(reader["UnidadesEnExistencia"]),
 
-                UnidadesEnExistencia =
-                    reader.GetInt16(reader.GetOrdinal("UnidadesEnExistencia")),
+                UnidadesEnPedido = reader["UnidadesEnPedido"] == DBNull.Value
+                    ? (short)0
+                    : Convert.ToInt16(reader["UnidadesEnPedido"]),
 
-                UnidadesEnPedido =
-                    reader.GetInt16(reader.GetOrdinal("UnidadesEnPedido")),
+                NivelDeReorden = reader["NivelDeReorden"] == DBNull.Value
+                    ? (short)0
+                    : Convert.ToInt16(reader["NivelDeReorden"]),
+                Descontinuado = reader["Descontinuado"] != DBNull.Value
+                    && Convert.ToBoolean(reader["Descontinuado"]),
 
-                NivelDeReorden =
-                    reader.GetInt16(reader.GetOrdinal("NivelDeReorden")),
-
-                Descontinuado =
-                    reader.GetBoolean(reader.GetOrdinal("Descontinuado"))
+                Activo = reader["Activo"] != DBNull.Value
+                    && Convert.ToBoolean(reader["Activo"])
             });
         }
 
-        return lista;
+        return productos;
     }
 
     public async Task<int> InsertarAsync(Producto producto)
     {
-        using var connection =
-            new SqlConnection(DbConfig.ConnectionString);
+        using var connection = new SqlConnection(DbConfig.ConnectionString);
+        using var command = new SqlCommand(
+            "sp_Productos_Insertar",
+            connection);
 
-        using var command =
-            new SqlCommand(
-                "sp_Productos_Insertar",
-                connection);
+        command.CommandType = CommandType.StoredProcedure;
 
-        command.CommandType =
-            CommandType.StoredProcedure;
+        command.Parameters.AddWithValue(
+            "@NombreProducto",
+            producto.NombreProducto);
 
-        AgregarParametros(command, producto);
+        command.Parameters.AddWithValue(
+            "@ProveedorID",
+            (object?)producto.ProveedorID ?? DBNull.Value);
+
+        command.Parameters.AddWithValue(
+            "@CategoriaID",
+            (object?)producto.CategoriaID ?? DBNull.Value);
+
+        command.Parameters.AddWithValue(
+            "@CantidadPorUnidad",
+            (object?)producto.CantidadPorUnidad ?? DBNull.Value);
+
+        command.Parameters.AddWithValue(
+            "@PrecioUnidad",
+            producto.PrecioUnidad);
+
+        command.Parameters.AddWithValue(
+            "@UnidadesEnExistencia",
+            producto.UnidadesEnExistencia);
+
+        command.Parameters.AddWithValue(
+            "@UnidadesEnPedido",
+            producto.UnidadesEnPedido);
+
+        command.Parameters.AddWithValue(
+            "@NivelDeReorden",
+            producto.NivelDeReorden);
+
+        command.Parameters.AddWithValue(
+            "@Descontinuado",
+            producto.Descontinuado);
 
         await connection.OpenAsync();
 
-        return Convert.ToInt32(
-            await command.ExecuteScalarAsync());
+        await command.ExecuteNonQueryAsync();
+
+        return 1;
     }
-    public async Task ActualizarAsync(Producto producto)
+
+    public async Task<int> ActualizarAsync(Producto producto)
     {
         using var connection = new SqlConnection(DbConfig.ConnectionString);
-
         using var command = new SqlCommand(
             "sp_Productos_Actualizar",
             connection);
 
         command.CommandType = CommandType.StoredProcedure;
 
-        command.Parameters.Add("@ProductoID", SqlDbType.Int)
-            .Value = producto.ProductoID;
+        command.Parameters.AddWithValue(
+            "@ProductoID",
+            producto.ProductoID);
 
-        AgregarParametros(command, producto);
+        command.Parameters.AddWithValue(
+            "@NombreProducto",
+            producto.NombreProducto);
+
+        command.Parameters.AddWithValue(
+            "@ProveedorID",
+            (object?)producto.ProveedorID ?? DBNull.Value);
+
+        command.Parameters.AddWithValue(
+            "@CategoriaID",
+            (object?)producto.CategoriaID ?? DBNull.Value);
+
+        command.Parameters.AddWithValue(
+            "@CantidadPorUnidad",
+            (object?)producto.CantidadPorUnidad ?? DBNull.Value);
+
+        command.Parameters.AddWithValue(
+            "@PrecioUnidad",
+            producto.PrecioUnidad);
+
+        command.Parameters.AddWithValue(
+            "@UnidadesEnExistencia",
+            producto.UnidadesEnExistencia);
+
+        command.Parameters.AddWithValue(
+            "@UnidadesEnPedido",
+            producto.UnidadesEnPedido);
+
+        command.Parameters.AddWithValue(
+            "@NivelDeReorden",
+            producto.NivelDeReorden);
+
+        command.Parameters.AddWithValue(
+            "@Descontinuado",
+            producto.Descontinuado);
 
         await connection.OpenAsync();
 
-        await command.ExecuteNonQueryAsync();
+        return await command.ExecuteNonQueryAsync();
     }
-    public async Task EliminarAsync(int productoId)
+
+    public async Task<int> EliminarAsync(int productoID)
     {
         using var connection = new SqlConnection(DbConfig.ConnectionString);
-
         using var command = new SqlCommand(
             "sp_Productos_Eliminar",
             connection);
 
         command.CommandType = CommandType.StoredProcedure;
 
-        command.Parameters.Add("@ProductoID", SqlDbType.Int)
-            .Value = productoId;
+        command.Parameters.AddWithValue(
+            "@ProductoID",
+            productoID);
 
         await connection.OpenAsync();
 
-        await command.ExecuteNonQueryAsync();
-    }
-
-    private static void AgregarParametros(
-        SqlCommand command,
-        Producto producto)
-    {
-        command.Parameters.Add("@NombreProducto", SqlDbType.NVarChar, 60)
-            .Value = producto.NombreProducto;
-
-        command.Parameters.Add("@ProveedorID", SqlDbType.Int)
-            .Value = (object?)producto.ProveedorID ?? DBNull.Value;
-
-        command.Parameters.Add("@CategoriaID", SqlDbType.Int)
-            .Value = (object?)producto.CategoriaID ?? DBNull.Value;
-
-        command.Parameters.Add("@CantidadPorUnidad", SqlDbType.NVarChar, 30)
-            .Value = (object?)producto.CantidadPorUnidad ?? DBNull.Value;
-
-        var precio = command.Parameters.Add(
-            "@PrecioUnidad",
-            SqlDbType.Decimal);
-
-        precio.Precision = 10;
-        precio.Scale = 2;
-        precio.Value = producto.PrecioUnidad;
-
-        command.Parameters.Add("@UnidadesEnExistencia", SqlDbType.SmallInt)
-            .Value = producto.UnidadesEnExistencia;
-
-        command.Parameters.Add("@UnidadesEnPedido", SqlDbType.SmallInt)
-            .Value = producto.UnidadesEnPedido;
-
-        command.Parameters.Add("@NivelDeReorden", SqlDbType.SmallInt)
-            .Value = producto.NivelDeReorden;
-
-        command.Parameters.Add("@Descontinuado", SqlDbType.Bit)
-            .Value = producto.Descontinuado;
+        return await command.ExecuteNonQueryAsync();
     }
 }

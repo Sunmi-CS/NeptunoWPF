@@ -1,11 +1,11 @@
-﻿/* ============================================================
-   CRUD de Productos  
-   ============================================================ */
-
--- Listar productos
-USE NeptunoDB;
+﻿USE NeptunoDB;
 GO
 
+/* ============================================================
+   PRODUCTOS
+   ============================================================ */
+
+-- LISTAR PRODUCTOS ACTIVOS
 CREATE OR ALTER PROCEDURE dbo.sp_Productos_Listar
 AS
 BEGIN
@@ -23,32 +23,35 @@ BEGIN
         p.UnidadesEnExistencia,
         p.UnidadesEnPedido,
         p.NivelDeReorden,
-        p.Descontinuado
-    FROM Productos p
-    LEFT JOIN Proveedores pr
+        p.Descontinuado,
+        p.Activo
+    FROM dbo.Productos p
+    LEFT JOIN dbo.Proveedores pr
         ON p.ProveedorID = pr.ProveedorID
-    LEFT JOIN Categorias c
+    LEFT JOIN dbo.Categorias c
         ON p.CategoriaID = c.CategoriaID
+    WHERE p.Activo = 1
     ORDER BY p.ProductoID;
 END;
 GO
 
--- Insertar producto
+
+-- INSERTAR PRODUCTO
 CREATE OR ALTER PROCEDURE dbo.sp_Productos_Insertar
-    @NombreProducto NVARCHAR(60),
-    @ProveedorID INT = NULL,
-    @CategoriaID INT = NULL,
-    @CantidadPorUnidad NVARCHAR(30) = NULL,
-    @PrecioUnidad DECIMAL(10,2),
+    @NombreProducto       NVARCHAR(60),
+    @ProveedorID          INT = NULL,
+    @CategoriaID          INT = NULL,
+    @CantidadPorUnidad    NVARCHAR(30) = NULL,
+    @PrecioUnidad         DECIMAL(10,2),
     @UnidadesEnExistencia SMALLINT,
-    @UnidadesEnPedido SMALLINT,
-    @NivelDeReorden SMALLINT,
-    @Descontinuado BIT
+    @UnidadesEnPedido     SMALLINT,
+    @NivelDeReorden       SMALLINT,
+    @Descontinuado        BIT
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    INSERT INTO Productos
+    INSERT INTO dbo.Productos
     (
         NombreProducto,
         ProveedorID,
@@ -58,7 +61,8 @@ BEGIN
         UnidadesEnExistencia,
         UnidadesEnPedido,
         NivelDeReorden,
-        Descontinuado
+        Descontinuado,
+        Activo
     )
     VALUES
     (
@@ -70,30 +74,30 @@ BEGIN
         @UnidadesEnExistencia,
         @UnidadesEnPedido,
         @NivelDeReorden,
-        @Descontinuado
+        @Descontinuado,
+        1
     );
-
-    SELECT CAST(SCOPE_IDENTITY() AS INT) AS ProductoID;
 END;
 GO
 
--- Actualizar producto
+
+-- ACTUALIZAR PRODUCTO
 CREATE OR ALTER PROCEDURE dbo.sp_Productos_Actualizar
-    @ProductoID INT,
-    @NombreProducto NVARCHAR(60),
-    @ProveedorID INT,
-    @CategoriaID INT,
-    @CantidadPorUnidad NVARCHAR(30),
-    @PrecioUnidad DECIMAL(10,2),
+    @ProductoID           INT,
+    @NombreProducto       NVARCHAR(60),
+    @ProveedorID          INT = NULL,
+    @CategoriaID          INT = NULL,
+    @CantidadPorUnidad    NVARCHAR(30) = NULL,
+    @PrecioUnidad         DECIMAL(10,2),
     @UnidadesEnExistencia SMALLINT,
-    @UnidadesEnPedido SMALLINT,
-    @NivelDeReorden SMALLINT,
-    @Descontinuado BIT
+    @UnidadesEnPedido     SMALLINT,
+    @NivelDeReorden       SMALLINT,
+    @Descontinuado        BIT
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    UPDATE Productos
+    UPDATE dbo.Productos
     SET
         NombreProducto = @NombreProducto,
         ProveedorID = @ProveedorID,
@@ -104,36 +108,33 @@ BEGIN
         UnidadesEnPedido = @UnidadesEnPedido,
         NivelDeReorden = @NivelDeReorden,
         Descontinuado = @Descontinuado
-    WHERE ProductoID = @ProductoID;
+    WHERE ProductoID = @ProductoID
+      AND Activo = 1;
 END;
 GO
--- Eliminar producto
-CREATE OR ALTER PROCEDURE sp_Productos_Eliminar
+
+
+-- ELIMINACIÓN LÓGICA DE PRODUCTO
+CREATE OR ALTER PROCEDURE dbo.sp_Productos_Eliminar
     @ProductoID INT
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    IF EXISTS (
-        SELECT 1
-        FROM DetallePedidos
-        WHERE ProductoID = @ProductoID
-    )
-    BEGIN
-        THROW 50001, 'No se puede eliminar el producto porque tiene pedidos asociados.', 1;
-    END;
-
-    DELETE FROM Productos
-    WHERE ProductoID = @ProductoID;
+    UPDATE dbo.Productos
+    SET Activo = 0
+    WHERE ProductoID = @ProductoID
+      AND Activo = 1;
 END;
 GO
 
+
 /* ============================================================
-   CRUD de Categorías  
+   CATEGORÍAS
    ============================================================ */
 
-   -- Listar categorías
-CREATE OR ALTER PROCEDURE sp_Categorias_Listar
+-- LISTAR CATEGORÍAS ACTIVAS
+CREATE OR ALTER PROCEDURE dbo.sp_Categorias_Listar
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -141,37 +142,41 @@ BEGIN
     SELECT
         CategoriaID,
         NombreCategoria,
-        Descripcion
-    FROM Categorias
+        Descripcion,
+        Activo
+    FROM dbo.Categorias
+    WHERE Activo = 1
     ORDER BY CategoriaID;
 END;
 GO
 
--- Insertar categoría
-CREATE OR ALTER PROCEDURE sp_Categorias_Insertar
+
+-- INSERTAR CATEGORÍA
+CREATE OR ALTER PROCEDURE dbo.sp_Categorias_Insertar
     @NombreCategoria NVARCHAR(30),
     @Descripcion NVARCHAR(200) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    INSERT INTO Categorias
+    INSERT INTO dbo.Categorias
     (
         NombreCategoria,
-        Descripcion
+        Descripcion,
+        Activo
     )
     VALUES
     (
         @NombreCategoria,
-        @Descripcion
+        @Descripcion,
+        1
     );
-
-    SELECT CAST(SCOPE_IDENTITY() AS INT) AS CategoriaID;
 END;
 GO
 
--- Actualizar categoría
-CREATE OR ALTER PROCEDURE sp_Categorias_Actualizar
+
+-- ACTUALIZAR CATEGORÍA
+CREATE OR ALTER PROCEDURE dbo.sp_Categorias_Actualizar
     @CategoriaID INT,
     @NombreCategoria NVARCHAR(30),
     @Descripcion NVARCHAR(200) = NULL
@@ -179,40 +184,37 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    UPDATE Categorias
+    UPDATE dbo.Categorias
     SET
         NombreCategoria = @NombreCategoria,
         Descripcion = @Descripcion
-    WHERE CategoriaID = @CategoriaID;
+    WHERE CategoriaID = @CategoriaID
+      AND Activo = 1;
 END;
 GO
 
--- Eliminar categoría
-CREATE OR ALTER PROCEDURE sp_Categorias_Eliminar
+
+-- ELIMINACIÓN LÓGICA DE CATEGORÍA
+CREATE OR ALTER PROCEDURE dbo.sp_Categorias_Eliminar
     @CategoriaID INT
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    IF EXISTS (
-        SELECT 1
-        FROM Productos
-        WHERE CategoriaID = @CategoriaID
-    )
-    BEGIN
-        THROW 50002, 'No se puede eliminar la categoría porque tiene productos asociados.', 1;
-    END;
-
-    DELETE FROM Categorias
-    WHERE CategoriaID = @CategoriaID;
+    UPDATE dbo.Categorias
+    SET Activo = 0
+    WHERE CategoriaID = @CategoriaID
+      AND Activo = 1;
 END;
 GO
 
+
 /* ============================================================
-   CRUD de Proveedores  
+   PROVEEDORES
    ============================================================ */
--- Listar proveedores
-CREATE OR ALTER PROCEDURE sp_Proveedores_Listar
+
+-- LISTAR PROVEEDORES ACTIVOS
+CREATE OR ALTER PROCEDURE dbo.sp_Proveedores_Listar
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -227,112 +229,17 @@ BEGIN
         CodigoPostal,
         Pais,
         Telefono,
-        Fax
-    FROM Proveedores
+        Fax,
+        Activo
+    FROM dbo.Proveedores
+    WHERE Activo = 1
     ORDER BY ProveedorID;
 END;
 GO
 
--- Insertar proveedor
-CREATE OR ALTER PROCEDURE sp_Proveedores_Insertar
-    @CompaniaNombre NVARCHAR(60),
-    @NombreContacto NVARCHAR(40) = NULL,
-    @CargoContacto NVARCHAR(40) = NULL,
-    @Direccion NVARCHAR(80) = NULL,
-    @Ciudad NVARCHAR(30) = NULL,
-    @CodigoPostal NVARCHAR(10) = NULL,
-    @Pais NVARCHAR(30) = NULL,
-    @Telefono NVARCHAR(24) = NULL,
-    @Fax NVARCHAR(24) = NULL
-AS
-BEGIN
-    SET NOCOUNT ON;
 
-    INSERT INTO Proveedores
-    (
-        CompaniaNombre,
-        NombreContacto,
-        CargoContacto,
-        Direccion,
-        Ciudad,
-        CodigoPostal,
-        Pais,
-        Telefono,
-        Fax
-    )
-    VALUES
-    (
-        @CompaniaNombre,
-        @NombreContacto,
-        @CargoContacto,
-        @Direccion,
-        @Ciudad,
-        @CodigoPostal,
-        @Pais,
-        @Telefono,
-        @Fax
-    );
-
-    SELECT CAST(SCOPE_IDENTITY() AS INT) AS ProveedorID;
-END;
-GO
-
--- Actualizar proveedor
-CREATE OR ALTER PROCEDURE sp_Proveedores_Actualizar
-    @ProveedorID INT,
-    @CompaniaNombre NVARCHAR(60),
-    @NombreContacto NVARCHAR(40) = NULL,
-    @CargoContacto NVARCHAR(40) = NULL,
-    @Direccion NVARCHAR(80) = NULL,
-    @Ciudad NVARCHAR(30) = NULL,
-    @CodigoPostal NVARCHAR(10) = NULL,
-    @Pais NVARCHAR(30) = NULL,
-    @Telefono NVARCHAR(24) = NULL,
-    @Fax NVARCHAR(24) = NULL
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    UPDATE Proveedores
-    SET
-        CompaniaNombre = @CompaniaNombre,
-        NombreContacto = @NombreContacto,
-        CargoContacto = @CargoContacto,
-        Direccion = @Direccion,
-        Ciudad = @Ciudad,
-        CodigoPostal = @CodigoPostal,
-        Pais = @Pais,
-        Telefono = @Telefono,
-        Fax = @Fax
-    WHERE ProveedorID = @ProveedorID;
-END;
-GO
-
--- Eliminar proveedor
-CREATE OR ALTER PROCEDURE sp_Proveedores_Eliminar
-    @ProveedorID INT
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    IF EXISTS (
-        SELECT 1
-        FROM Productos
-        WHERE ProveedorID = @ProveedorID
-    )
-    BEGIN
-        THROW 50003, 'No se puede eliminar el proveedor porque tiene productos asociados.', 1;
-    END;
-
-    DELETE FROM Proveedores
-    WHERE ProveedorID = @ProveedorID;
-END;
-GO
-
-
--- Listado de proveedores por nombreContacto y ciudad
-
-CREATE OR ALTER PROCEDURE sp_Proveedores_Buscar
+-- BUSCAR PROVEEDORES POR CONTACTO Y/O CIUDAD
+CREATE OR ALTER PROCEDURE dbo.sp_Proveedores_Buscar
     @NombreContacto NVARCHAR(40) = NULL,
     @Ciudad NVARCHAR(30) = NULL
 AS
@@ -349,24 +256,124 @@ BEGIN
         CodigoPostal,
         Pais,
         Telefono,
-        Fax
-    FROM Proveedores
-    WHERE
-        (@NombreContacto IS NULL
-         OR NombreContacto LIKE '%' + @NombreContacto + '%')
-    AND
-        (@Ciudad IS NULL
-         OR Ciudad LIKE '%' + @Ciudad + '%')
-    ORDER BY CompaniaNombre;
+        Fax,
+        Activo
+    FROM dbo.Proveedores
+    WHERE Activo = 1
+      AND (
+            @NombreContacto IS NULL
+            OR @NombreContacto = ''
+            OR NombreContacto LIKE '%' + @NombreContacto + '%'
+          )
+      AND (
+            @Ciudad IS NULL
+            OR @Ciudad = ''
+            OR Ciudad LIKE '%' + @Ciudad + '%'
+          )
+    ORDER BY ProveedorID;
+END;
+GO
+
+
+-- INSERTAR PROVEEDOR
+CREATE OR ALTER PROCEDURE dbo.sp_Proveedores_Insertar
+    @CompaniaNombre NVARCHAR(60),
+    @NombreContacto NVARCHAR(40) = NULL,
+    @CargoContacto NVARCHAR(40) = NULL,
+    @Direccion NVARCHAR(80) = NULL,
+    @Ciudad NVARCHAR(30) = NULL,
+    @CodigoPostal NVARCHAR(10) = NULL,
+    @Pais NVARCHAR(30) = NULL,
+    @Telefono NVARCHAR(24) = NULL,
+    @Fax NVARCHAR(24) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO dbo.Proveedores
+    (
+        CompaniaNombre,
+        NombreContacto,
+        CargoContacto,
+        Direccion,
+        Ciudad,
+        CodigoPostal,
+        Pais,
+        Telefono,
+        Fax,
+        Activo
+    )
+    VALUES
+    (
+        @CompaniaNombre,
+        @NombreContacto,
+        @CargoContacto,
+        @Direccion,
+        @Ciudad,
+        @CodigoPostal,
+        @Pais,
+        @Telefono,
+        @Fax,
+        1
+    );
+END;
+GO
+
+
+-- ACTUALIZAR PROVEEDOR
+CREATE OR ALTER PROCEDURE dbo.sp_Proveedores_Actualizar
+    @ProveedorID INT,
+    @CompaniaNombre NVARCHAR(60),
+    @NombreContacto NVARCHAR(40) = NULL,
+    @CargoContacto NVARCHAR(40) = NULL,
+    @Direccion NVARCHAR(80) = NULL,
+    @Ciudad NVARCHAR(30) = NULL,
+    @CodigoPostal NVARCHAR(10) = NULL,
+    @Pais NVARCHAR(30) = NULL,
+    @Telefono NVARCHAR(24) = NULL,
+    @Fax NVARCHAR(24) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE dbo.Proveedores
+    SET
+        CompaniaNombre = @CompaniaNombre,
+        NombreContacto = @NombreContacto,
+        CargoContacto = @CargoContacto,
+        Direccion = @Direccion,
+        Ciudad = @Ciudad,
+        CodigoPostal = @CodigoPostal,
+        Pais = @Pais,
+        Telefono = @Telefono,
+        Fax = @Fax
+    WHERE ProveedorID = @ProveedorID
+      AND Activo = 1;
+END;
+GO
+
+
+-- ELIMINACIÓN LÓGICA DE PROVEEDOR
+CREATE OR ALTER PROCEDURE dbo.sp_Proveedores_Eliminar
+    @ProveedorID INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE dbo.Proveedores
+    SET Activo = 0
+    WHERE ProveedorID = @ProveedorID
+      AND Activo = 1;
 END;
 GO
 
 
 /* ============================================================
-   CRUD de Pedidos  
+   PEDIDOS
    ============================================================ */
--- Listar pedidos
-CREATE OR ALTER PROCEDURE sp_Pedidos_Listar
+
+-- LISTAR PEDIDOS ACTIVOS
+CREATE OR ALTER PROCEDURE dbo.sp_Pedidos_Listar
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -384,20 +391,23 @@ BEGIN
         t.CompaniaNombre AS Transportista,
         p.Destinatario,
         p.CiudadDestino,
-        p.PaisDestino
-    FROM Pedidos p
-    LEFT JOIN Clientes c
+        p.PaisDestino,
+        p.Activo
+    FROM dbo.Pedidos p
+    LEFT JOIN dbo.Clientes c
         ON p.ClienteID = c.ClienteID
-    LEFT JOIN Empleados e
+    LEFT JOIN dbo.Empleados e
         ON p.EmpleadoID = e.EmpleadoID
-    LEFT JOIN Transportistas t
+    LEFT JOIN dbo.Transportistas t
         ON p.TransportistaID = t.TransportistaID
+    WHERE p.Activo = 1
     ORDER BY p.PedidoID;
 END;
 GO
 
--- Insertar pedido
-CREATE OR ALTER PROCEDURE sp_Pedidos_Insertar
+
+-- INSERTAR PEDIDO
+CREATE OR ALTER PROCEDURE dbo.sp_Pedidos_Insertar
     @ClienteID INT = NULL,
     @EmpleadoID INT = NULL,
     @FechaPedido DATE,
@@ -411,7 +421,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    INSERT INTO Pedidos
+    INSERT INTO dbo.Pedidos
     (
         ClienteID,
         EmpleadoID,
@@ -421,7 +431,8 @@ BEGIN
         TransportistaID,
         Destinatario,
         CiudadDestino,
-        PaisDestino
+        PaisDestino,
+        Activo
     )
     VALUES
     (
@@ -433,15 +444,15 @@ BEGIN
         @TransportistaID,
         @Destinatario,
         @CiudadDestino,
-        @PaisDestino
+        @PaisDestino,
+        1
     );
-
-    SELECT CAST(SCOPE_IDENTITY() AS INT) AS PedidoID;
 END;
 GO
 
--- Actualizar pedido
-CREATE OR ALTER PROCEDURE sp_Pedidos_Actualizar
+
+-- ACTUALIZAR PEDIDO
+CREATE OR ALTER PROCEDURE dbo.sp_Pedidos_Actualizar
     @PedidoID INT,
     @ClienteID INT = NULL,
     @EmpleadoID INT = NULL,
@@ -456,7 +467,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    UPDATE Pedidos
+    UPDATE dbo.Pedidos
     SET
         ClienteID = @ClienteID,
         EmpleadoID = @EmpleadoID,
@@ -467,32 +478,31 @@ BEGIN
         Destinatario = @Destinatario,
         CiudadDestino = @CiudadDestino,
         PaisDestino = @PaisDestino
-    WHERE PedidoID = @PedidoID;
+    WHERE PedidoID = @PedidoID
+      AND Activo = 1;
 END;
 GO
 
--- Eliminar pedido
-CREATE OR ALTER PROCEDURE sp_Pedidos_Eliminar
+
+-- ELIMINACIÓN LÓGICA DE PEDIDO
+CREATE OR ALTER PROCEDURE dbo.sp_Pedidos_Eliminar
     @PedidoID INT
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    IF EXISTS (
-        SELECT 1
-        FROM DetallePedidos
-        WHERE PedidoID = @PedidoID
-    )
-    BEGIN
-        THROW 50004, 'No se puede eliminar el pedido porque tiene detalles asociados.', 1;
-    END;
-
-    DELETE FROM Pedidos
-    WHERE PedidoID = @PedidoID;
+    UPDATE dbo.Pedidos
+    SET Activo = 0
+    WHERE PedidoID = @PedidoID
+      AND Activo = 1;
 END;
 GO
 
--- Reporte de detalles de pedidos por fechas
+
+/* ============================================================
+   REPORTE DE DETALLE DE PEDIDOS POR FECHAS
+   ============================================================ */
+
 CREATE OR ALTER PROCEDURE dbo.sp_DetallePedidos_PorFechas
     @FechaInicio DATE,
     @FechaFin DATE
@@ -508,14 +518,44 @@ BEGIN
         dp.PrecioUnidad,
         dp.Cantidad,
         dp.Descuento,
-        (dp.PrecioUnidad * dp.Cantidad * (1 - dp.Descuento)) AS Subtotal
-    FROM DetallePedidos dp
-    INNER JOIN Pedidos p
+        (
+            dp.PrecioUnidad
+            * dp.Cantidad
+            * (1 - dp.Descuento)
+        ) AS Subtotal
+    FROM dbo.DetallePedidos dp
+    INNER JOIN dbo.Pedidos p
         ON dp.PedidoID = p.PedidoID
-    INNER JOIN Productos pr
+    INNER JOIN dbo.Productos pr
         ON dp.ProductoID = pr.ProductoID
     WHERE p.FechaPedido >= @FechaInicio
       AND p.FechaPedido <= @FechaFin
+      AND p.Activo = 1
     ORDER BY p.FechaPedido, dp.PedidoID;
 END;
 GO
+
+EXEC dbo.sp_Productos_Listar;
+
+EXEC dbo.sp_Categorias_Listar;
+
+EXEC dbo.sp_Proveedores_Listar;
+
+EXEC dbo.sp_Proveedores_Buscar
+    @NombreContacto = N'Ana',
+    @Ciudad = N'Lima';
+EXEC dbo.sp_Pedidos_Listar;
+
+EXEC dbo.sp_DetallePedidos_PorFechas
+    @FechaInicio = '2026-08-12',
+    @FechaFin = '2026-08-20';
+
+
+EXEC dbo.sp_Productos_Eliminar
+    @ProductoID = 1;
+
+SELECT *
+FROM dbo.Productos
+WHERE ProductoID = 1;
+
+EXEC dbo.sp_Productos_Listar;
