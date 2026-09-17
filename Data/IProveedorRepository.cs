@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using NeptunoWPF.Models;
 
 namespace NeptunoWPF.Data;
@@ -16,7 +14,7 @@ public interface IProveedorRepository
 
     Task<int> InsertarAsync(Proveedor proveedor);
 
-    Task ActualizarAsync(Proveedor proveedor);
+    Task<int> ActualizarAsync(Proveedor proveedor);
 
-    Task EliminarAsync(int proveedorId);
+    Task<int> EliminarAsync(int proveedorID);
 }

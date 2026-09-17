@@ -12,7 +12,11 @@ using System.Windows.Shapes;
 
 using NeptunoWPF.Models;
 using NeptunoWPF.ViewModels;
+
 using System.Windows;
+
+using NeptunoWPF.Models;
+using NeptunoWPF.ViewModels;
 
 namespace NeptunoWPF.Views;
 
@@ -26,10 +30,9 @@ public partial class ProveedorEditWindow : Window
     {
         InitializeComponent();
 
-        _viewModel =
-            new ProveedorEditViewModel(
-                proveedor,
-                esEdicion);
+        _viewModel = new ProveedorEditViewModel(
+            proveedor,
+            esEdicion);
 
         DataContext = _viewModel;
     }
@@ -38,15 +41,11 @@ public partial class ProveedorEditWindow : Window
         object sender,
         RoutedEventArgs e)
     {
-        try
-        {
-            await _viewModel.GuardarAsync();
+        bool guardado = await _viewModel.GuardarAsync();
 
-            DialogResult = true;
-        }
-        catch (Exception ex)
+        if (guardado)
         {
-            MessageBox.Show(ex.Message);
+            DialogResult = true;
         }
     }
 

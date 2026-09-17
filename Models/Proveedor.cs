@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NeptunoWPF.Models;
+﻿namespace NeptunoWPF.Models;
 
 public class Proveedor
 {
@@ -25,4 +21,6 @@ public class Proveedor
     public string? Telefono { get; set; }
 
     public string? Fax { get; set; }
+
+    public bool Activo { get; set; } = true;
 }

@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Windows;
 
 using NeptunoWPF.Data;
 using NeptunoWPF.Models;
-using System.Collections.ObjectModel;
-using System.Windows;
 
 namespace NeptunoWPF.ViewModels;
 
@@ -13,31 +12,24 @@ public class ProveedorViewModel : ViewModelBase
 {
     private readonly IProveedorRepository _repository;
 
-    public ObservableCollection<Proveedor> Proveedores { get; } = new();
+    public ObservableCollection<Proveedor> Proveedores { get; }
+        = new();
 
     private Proveedor? _proveedorSeleccionado;
 
     public Proveedor? ProveedorSeleccionado
     {
         get => _proveedorSeleccionado;
-        set => SetProperty(ref _proveedorSeleccionado, value);
+        set => SetProperty(
+            ref _proveedorSeleccionado,
+            value);
     }
 
-    private string _nombreContactoFiltro = string.Empty;
+    public string NombreContactoBusqueda { get; set; }
+        = string.Empty;
 
-    public string NombreContactoFiltro
-    {
-        get => _nombreContactoFiltro;
-        set => SetProperty(ref _nombreContactoFiltro, value);
-    }
-
-    private string _ciudadFiltro = string.Empty;
-
-    public string CiudadFiltro
-    {
-        get => _ciudadFiltro;
-        set => SetProperty(ref _ciudadFiltro, value);
-    }
+    public string CiudadBusqueda { get; set; }
+        = string.Empty;
 
     public ProveedorViewModel()
     {
@@ -53,11 +45,20 @@ public class ProveedorViewModel : ViewModelBase
             Proveedores.Clear();
 
             foreach (var proveedor in lista)
+            {
                 Proveedores.Add(proveedor);
+            }
+
+            ProveedorSeleccionado = null;
         }
         catch (Exception ex)
         {
-            MostrarError(ex);
+            MessageBox.Show(
+                "No se pudieron cargar los proveedores.\n\n"
+                + ex.Message,
+                "Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
         }
     }
 
@@ -66,37 +67,47 @@ public class ProveedorViewModel : ViewModelBase
         try
         {
             var lista = await _repository.BuscarAsync(
-                NombreContactoFiltro,
-                CiudadFiltro);
+                NombreContactoBusqueda,
+                CiudadBusqueda);
 
             Proveedores.Clear();
 
             foreach (var proveedor in lista)
+            {
                 Proveedores.Add(proveedor);
+            }
+
+            ProveedorSeleccionado = null;
         }
         catch (Exception ex)
         {
-            MostrarError(ex);
+            MessageBox.Show(
+                "No se pudo realizar la búsqueda.\n\n"
+                + ex.Message,
+                "Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
         }
-    }
-
-    public async Task LimpiarFiltrosAsync()
-    {
-        NombreContactoFiltro = string.Empty;
-        CiudadFiltro = string.Empty;
-
-        await CargarAsync();
     }
 
     public async Task EliminarAsync()
     {
         if (ProveedorSeleccionado == null)
+        {
+            MessageBox.Show(
+                "Selecciona un proveedor.",
+                "Aviso",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+
             return;
+        }
 
         var respuesta = MessageBox.Show(
             "¿Deseas eliminar el proveedor seleccionado?",
-            "Confirmar",
-            MessageBoxButton.YesNo);
+            "Confirmar eliminación",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
 
         if (respuesta != MessageBoxResult.Yes)
             return;
@@ -107,19 +118,21 @@ public class ProveedorViewModel : ViewModelBase
                 ProveedorSeleccionado.ProveedorID);
 
             await CargarAsync();
+
+            MessageBox.Show(
+                "Proveedor eliminado correctamente.",
+                "Éxito",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
         }
         catch (Exception ex)
         {
-            MostrarError(ex);
+            MessageBox.Show(
+                "No se pudo eliminar el proveedor.\n\n"
+                + ex.Message,
+                "Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
         }
-    }
-
-    private static void MostrarError(Exception ex)
-    {
-        MessageBox.Show(
-            ex.Message,
-            "Error",
-            MessageBoxButton.OK,
-            MessageBoxImage.Error);
     }
 }

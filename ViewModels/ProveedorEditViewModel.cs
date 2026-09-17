@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
 
 using NeptunoWPF.Data;
 using NeptunoWPF.Models;
-using System.Windows;
 
 namespace NeptunoWPF.ViewModels;
 
@@ -26,24 +25,53 @@ public class ProveedorEditViewModel : ViewModelBase
         EsEdicion = esEdicion;
     }
 
-    public async Task GuardarAsync()
+    public async Task<bool> GuardarAsync()
     {
         if (string.IsNullOrWhiteSpace(
             Proveedor.CompaniaNombre))
         {
             MessageBox.Show(
-                "El nombre de la compañía es obligatorio.");
+                "El nombre de la compañía es obligatorio.",
+                "Validación",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
 
-            return;
+            return false;
         }
 
-        if (EsEdicion)
+        try
         {
-            await _repository.ActualizarAsync(Proveedor);
+            if (EsEdicion)
+            {
+                await _repository.ActualizarAsync(
+                    Proveedor);
+            }
+            else
+            {
+                await _repository.InsertarAsync(
+                    Proveedor);
+            }
+
+            MessageBox.Show(
+                EsEdicion
+                    ? "Proveedor actualizado correctamente."
+                    : "Proveedor registrado correctamente.",
+                "Éxito",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            return true;
         }
-        else
+        catch (Exception ex)
         {
-            await _repository.InsertarAsync(Proveedor);
+            MessageBox.Show(
+                "No se pudo guardar el proveedor.\n\n"
+                + ex.Message,
+                "Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+
+            return false;
         }
     }
 }
