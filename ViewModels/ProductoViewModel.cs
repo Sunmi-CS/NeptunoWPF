@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 
 using NeptunoWPF.Data;
-using NeptunoWPF.Models;
+using NeptunoWPF.Data.Models;
 
 namespace NeptunoWPF.ViewModels;
 

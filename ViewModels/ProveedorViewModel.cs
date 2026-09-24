@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 
 using NeptunoWPF.Data;
-using NeptunoWPF.Models;
+using NeptunoWPF.Data.Models;
 
 namespace NeptunoWPF.ViewModels;
 
@@ -89,6 +89,14 @@ public class ProveedorViewModel : ViewModelBase
                 MessageBoxImage.Error);
         }
     }
+    public async Task LimpiarFiltrosAsync()
+    {
+        NombreContactoBusqueda = string.Empty;
+        CiudadBusqueda = string.Empty;
+
+        await CargarAsync();
+    }
+
 
     public async Task EliminarAsync()
     {

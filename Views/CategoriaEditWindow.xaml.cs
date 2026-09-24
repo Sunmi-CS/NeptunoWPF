@@ -10,12 +10,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-using NeptunoWPF.Models;
+using NeptunoWPF.Data.Models;
 using NeptunoWPF.ViewModels;
 
 using System.Windows;
 
-using NeptunoWPF.Models;
 using NeptunoWPF.ViewModels;
 
 namespace NeptunoWPF.Views;

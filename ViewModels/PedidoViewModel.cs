@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using NeptunoWPF.Data;
-using NeptunoWPF.Models;
+using NeptunoWPF.Data.Models;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -122,7 +122,7 @@ public class PedidoViewModel : ViewModelBase
         try
         {
             var lista =
-                await _repository.ReportePorFechasAsync(
+                await _repository.DetallePorFechasAsync(
                     FechaInicio,
                     FechaFin);
 

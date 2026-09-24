@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-using NeptunoWPF.Models;
+using NeptunoWPF.Data.Models;
 using NeptunoWPF.ViewModels;
 
 namespace NeptunoWPF.Views;

@@ -10,7 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-using NeptunoWPF.Models;
+using NeptunoWPF.Data.Models;
 using NeptunoWPF.ViewModels;
 using System.Collections.ObjectModel;
 using System.Windows;

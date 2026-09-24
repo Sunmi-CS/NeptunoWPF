@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using NeptunoWPF.Data;
-using NeptunoWPF.Models;
+using NeptunoWPF.Data.Models;
 using System.Collections.ObjectModel;
 using System.Windows;
 

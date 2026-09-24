@@ -10,7 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-using NeptunoWPF.Models;
+using NeptunoWPF.Data.Models;
 using NeptunoWPF.ViewModels;
 using System.Windows;
 
@@ -118,9 +118,7 @@ public partial class MainWindow : Window
     {
         var ventana = new ProductoEditWindow(
             new Producto(),
-            false,
-            _viewModel.Categorias.Categorias,
-            _viewModel.Proveedores.Proveedores);
+            false);
 
         ventana.Owner = this;
 
@@ -129,6 +127,7 @@ public partial class MainWindow : Window
             _ = _viewModel.Productos.CargarAsync();
         }
     }
+
 
     private void EditarProducto_Click(
         object sender,
@@ -142,9 +141,7 @@ public partial class MainWindow : Window
 
         var ventana = new ProductoEditWindow(
             _viewModel.Productos.ProductoSeleccionado,
-            true,
-            _viewModel.Categorias.Categorias,
-            _viewModel.Proveedores.Proveedores);
+            true);
 
         ventana.Owner = this;
 
@@ -153,6 +150,7 @@ public partial class MainWindow : Window
             _ = _viewModel.Productos.CargarAsync();
         }
     }
+
     private void NuevoCategoria_Click(
         object sender,
         RoutedEventArgs e)

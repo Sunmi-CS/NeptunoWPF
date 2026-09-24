@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="../NeptunoWPF.Data/NeptunoWPF.Data.csproj" Id="33517e5b-11ee-4cd1-9a20-c71b74fda91b" />
   <Project Path="NeptunoWPF.csproj" />
 </Solution>
